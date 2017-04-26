@@ -1,0 +1,37 @@
+<div class="form-group" style="z-index: 1;">
+  <div ng-if="label != undefined"><label class="label-control">{{label}}</label></div>
+
+  <div ng-show="uDisabled && (!model || model.length == 0)">
+    <div class="input-group form-control">
+      <div class="thumbnail" style="background-color:#f2f2f2;">
+        Aucun pays traversé
+      </div>
+    </div>
+  </div>
+
+  <div class="input-group form-control" ng-repeat="(key, value) in model track by key">
+    <div class="thumbnail" style="background-color:#f2f2f2;">
+      <strong>{{value.pays.libelle}}</strong> (
+      <span ng-show="value.date_entree">{{value.date_entree | xinDate: 'shortDate' : '+0000'}}<span ng-show="value.date_entree_approximative">~</span></span>
+      <span ng-show="!value.date_entree">*</span> -
+      <span ng-show="value.date_sortie">{{value.date_sortie | xinDate: 'shortDate' : '+0000'}}<span ng-show="value.date_sortie_approximative">~</span></span>
+      <span ng-show="!value.date_sortie">*</span> )<br />
+      Moyen de transport : <span ng-show="value.moyen_transport"><strong>{{value.moyen_transport}}</strong></span><span ng-show="!value.moyen_transport"> ? </span><br />
+      Condition de franchissement : <span ng-show="value.condition_franchissement"><strong>{{value.condition_franchissement}}</strong></span><span ng-show="!value.condition_franchissement"> ? </span>
+
+
+      <span class="pull-right">
+        <a href="" ng-click="editRow(key)" ng-show="!uDisabled"><span class="fa fa-edit"></span></a>
+        <a href="" ng-click="deleteRow(key)" ng-show="!uDisabled"><span class="fa fa-close"></span></a>
+      </span>
+
+      <div ng-show="error" class="alert alert-danger">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{error}}
+      </div>
+    </div>
+  </div>
+
+  <a class="btn btn-primary" href="" ng-click="addRow()" ng-show="!uDisabled">
+    Ajouter un pays traversé
+  </a>
+</div>

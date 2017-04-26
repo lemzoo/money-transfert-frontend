@@ -1,0 +1,157 @@
+<div class="actionbar container affix">
+  <div class="row">
+    <div class="col-md-2">
+      <navigationbar-directive></navigationbar-directive>
+    </div>
+    <div class="col-md-10">
+      <div class="buttonbar">
+        <button class="btn btn-primary pull-right"
+                ng-show="displayByGU && false"
+                ng-click="displayByGU = false">
+          Activer l'affichage par liste
+        </button>
+        <button class="btn btn-primary pull-right"
+                ng-show="!displayByGU && false"
+                ng-click="displayByGU = true">
+          Activer l'affichage par GU
+        </button>
+        <a href="#/premier-accueil/{{recueil_da.id}}"
+           class="btn btn-primary pull-right"
+           ng-disabled="">Revenir au recueil</a>
+        <sc-button
+          class="btn btn-danger pull-right"
+          ng-click="save()"
+          wait-for-class="fa fa-spinner fa-1 fa-pulse"
+          cancel-wait-for="saveDone"
+          ng-disabled=""
+          label="'Enregistrer le rendez-vous'">
+        </sc-button>
+      </div>
+    </div>
+  </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+<div class="content container">
+  <div class="row">
+
+    <div class="col-md-2 left-content">
+    </div>
+
+    <div class="col-md-10 right-content">
+      <div class="container">
+        <h3>Recueil n°{{recueil_da.id}}</h3>
+        <hr align="left">
+
+        <div class="form-group col-sm-12 thumbnail">
+          <div class="col-sm-6">
+            <label class="label-control">Profil de demande</label>
+            <input type="text" disabled="disabled" ng-value="profil_demande[recueil_da.profil_demande]" class="form-control" />
+          </div>
+          <div class="col-sm-6">
+            <br /><i class="fa fa-info-circle"></i> Veuillez sélectionner un créneau.
+          </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="alert alert-danger" ng-show="error">
+          {{ error }}
+        </div>
+        <div class="alert alert-danger" ng-show="errors._errors">
+          <div ng-repeat="(key, error) in errors._errors track by key">{{ error }}</div>
+        </div>
+
+        <div style="text-align: center;" ng-show="csv_spinner">
+          <h3>Récupération des données en cours...</h3>
+          <span class="fa fa-spinner fa-5x fa-pulse"></span>
+        </div>
+
+        <!-- Display all RDV -->
+        <div class="col-sm-12" ng-show="!displayByGU && !csv_spinner">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <i class="fa fa-lg fa-calendar"></i> Plages de rendez-vous
+              </h4>
+            </div>
+            <div class="panel-body">
+              <div ng-if="creneaux.length == 0" class="text-danger">
+                Aucun créneau n'est disponible pour le moment.
+              </div>
+              <div class="table-responsive">
+                <table class="table table-hover" ng-if="creneaux.length" style="text-align: center;">
+                  <thead>
+                    <tr>
+                      <th style="text-align: center;">Date du jour</th>
+                      <th style="text-align: center;">GU</th>
+                      <th style="text-align: center;">Heure</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr ng-repeat="creneau in creneaux"
+                        ng-class="{'active': active.id == creneau.id}"
+                        ng-click="book(creneau)">
+                      <td>{{creneau.date}}</td>
+                      <td>{{sites[creneau.gu].libelle}}</td>
+                      <td>{{creneau.slot}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Display by GU -->
+        <!-- <div class="col-sm-12" ng-repeat="site in sites" ng-show="displayByGU && !csv_spinner">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="heading_{{site.id}}">
+              <h4 class="panel-title">
+                <i class="fa fa-university"></i>
+                <a data-toggle="collapse" href=".collapse_{{site.id}}" aria-expanded="true" aria-controls="collapse_{{site.id}}">Guichet Unique - <strong>{{site.libelle}}</strong></a>
+              </h4>
+            </div>
+
+            <div class="collapse_{{site.id}} panel-collapse collapse in" role="tabpanel" aria-labelledby="#heading_{{site.id}}">
+              <div class="panel-body">
+                <div ng-if="creneaux_gu[site.id] == undefined" class="text-danger">
+                  Aucun créneau n'est disponible pour le moment.
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-hover" ng-if="creneaux_gu[site.id]" style="text-align: center;">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th ng-repeat="date in dates" style="text-align: center;">
+                          {{date}}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="slot in slots | orderBy">
+                        <th style="text-align: center;">{{slot}}</th>
+                        <td ng-repeat="date in dates" ng_init="creneau=creneaux_gu[site.id][slot][date]">
+                          <div ng-if="creneau == undefined" class="text-danger">Indisponible</div>
+                          <div ng-if="creneau" ng-init="nb_creneaux = creneau.all.length">
+                            <div class="text-success">{{nb_creneaux}} créneau{{nb_creneaux > 1 ? 'x' : ''}} de disponible{{nb_creneaux > 1? 's' : ''}}</div><br />
+                            <ul class="list-group">
+                              <li class="list-group-item" ng-class="{'list-group-item-info': active.indexOf(creneau.id)!=-1}">
+                                <a href="" ng-click="book(creneau)">Selectionner</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

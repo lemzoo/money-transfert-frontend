@@ -1,0 +1,46 @@
+<div class="modal-body">
+  <h4>Paramétrage d'un modèle {{modeleType}}</h4>
+  <hr>
+
+  <div>
+    <select-referential-directive
+      label="'Selectionner un modèle existant'"
+      model="modeles.index"
+      icon="'tags'"
+      choices="selectModeles"
+      placeholder="''"
+      ng-hide="validation">
+    </select-referential-directive>
+
+    <simple-text-input-directive
+      form_label="'Modèle *'"
+      form_icon="'bookmark'"
+      form_ng_model="modeles.new"
+      form_origin="modeles.new"
+      form_placeholder="''"
+      form_name="'libelle'"
+      form_disabled="modeles.index != ''"
+      form_popover="'ex: Modèle n°1'">
+    </simple-text-input-directive>
+
+    <plage-rdv-pf-directive calendar-cls="calendar"></plage-rdv-pf-directive>
+  </div>
+
+  <div class="alert alert-danger" ng-show="validation">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    Etes-vous sûr de vouloir utiliser le modèle quotidien ?
+  </div>
+  <div class="alert alert-danger" ng-show="_error">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{_error}}
+  </div>
+  <div class="alert alert-success" ng-show="_info">
+    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {{_info}}
+  </div>
+</div>
+
+<div class="modal-footer">
+  <a class="btn btn-default go-to-list" ng-click="cancel()">Annuler</a>
+  <a class="btn btn-danger go-to-resource" ng-hide="validation" ng-click="delete()">Supprimer le modèle</a>
+  <a class="btn btn-primary go-to-resource" ng-hide="validation" ng-click="save()">Enregistrer le modèle</a>
+  <a class="btn btn-success go-to-resource" ng-click="ok()">{{ok_button_label}}</a>
+</div>

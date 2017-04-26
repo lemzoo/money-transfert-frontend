@@ -1,0 +1,32 @@
+<div class="modal-content">
+  <div class="modal-header">
+      <p>
+        <span><strong>{{message}}</strong></span>
+        <br>
+        <span ng-if="alert_displayed" class="text-danger">Attention : pensez à sauvegarder vos modifications en cours</span>
+      </p>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid habilitation-container">
+      <ng-repeat ng-repeat="habilitation in activeHabilitations">
+        <div class="row" ng-click="selectHabilitation(habilitation.id)" ng-class="{selected: habilitation.isSelected}">
+          <div class="col-md-2">
+            <i class="fa fa-user fa-3x"></i>
+          </div>
+          <div class="col-md-10">
+            <div class="text-left">
+              <strong>Rôle :</strong> {{settings.ROLES[habilitation.role]}}
+              <br>
+              <strong>Site :</strong> {{habilitation.site_affecte.libelle}}
+              <br>
+            </div>
+          </div>
+        </div>
+      </ng-repeat>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-disabled="confirmDisabled" ng-click="confirm()">{{buttonConfirmText}}</button>
+    <button type="button" class="btn btn-default" ng-click="cancel()" ng-if="cancelDisplayed">{{buttonCancelText}}</button>
+  </div>
+</div>

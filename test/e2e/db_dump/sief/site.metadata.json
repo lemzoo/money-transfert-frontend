@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"sief.site"},{"v":1,"unique":true,"key":{"libelle":1},"name":"libelle_1","ns":"sief.site","sparse":false,"background":false},{"v":1,"key":{"_cls":1},"name":"_cls_1","ns":"sief.site","background":false}]}

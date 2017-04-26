@@ -1,0 +1,57 @@
+[
+  {
+    "type": "date",
+    "label": "Date de la demande",
+    "field": "date_demande"
+  },
+  {
+    "type": "text",
+    "label": "Identifiant Inerec",
+    "field": "identifiant_inerec",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": false,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Demande d'asile",
+    "field": "demande_asile",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": false,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Nom de l'agent",
+    "field": "agent_nom",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Prenom de l'agent'",
+    "field": "agent_prenoms",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Email de l'agent",
+    "field": "agent_email",
+    "icon": "at"
+  }
+]

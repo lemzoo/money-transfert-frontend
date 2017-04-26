@@ -1,0 +1,73 @@
+<div class="col-xs-12">
+  <span ng-show="filter.type == 'text'" class="col-xs-5">
+    <simple-text-input-directive
+      form_ng_model="filterValue.text"
+      form_icon="filter.icon"
+      form_placeholder="filter.label">
+    </simple-text-input-directive>
+  </span>
+
+  <span ng-show="filter.type == 'address'" class="col-xs-5">
+    <simple-text-input-directive
+      form_ng_model="filterValue.address"
+      form_icon="filter.icon"
+      form_placeholder="filter.label">
+    </simple-text-input-directive>
+  </span>
+
+  <span ng-show="filter.type == 'date'">
+    <h5 class="text-center col-xs-1">Du</h5>
+    <date-text-input-directive class="col-xs-4"
+      active="true"
+      model="filterValue.beginDate"
+      origin_model="filterValue.beginDate"
+      error="">
+    </date-text-input-directive>
+    <h5 class="text-center col-xs-1">au</h5>
+    <date-text-input-directive class="col-xs-4"
+      active="true"
+      model="filterValue.endDate"
+      origin_model="filterValue.endDate"
+      error="">
+    </date-text-input-directive>
+  </span>
+
+  <span ng-show="filter.type == 'identifier'" class="col-xs-5">
+    <select-referential-directive
+      model_listener="filterValue"
+      model="filterValue.identifier"
+      choices="filter.choices"
+      url="filter.url"
+      icon="filter.icon"
+      placeholder="filter.label">
+    </select-referential-directive>
+  </span>
+
+  <span ng-show="filter.type == 'boolean'" class="col-xs-5">
+    <select-referential-directive
+      model_listener="filterValue"
+      model="filterValue.boolean"
+      choices="booleanChoices"
+      icon="filter.icon"
+      placeholder="filter.label">
+    </select-referential-directive>
+  </span>
+
+  <span ng-show="filter.phonetisable.show" class="col-xs-5">
+    <toggle-switch-directive
+      ng-model="filterValue.phonetisable"
+      left-label="Non"
+      knob-label="Phonétique"
+      right-label="Oui"
+      switch-size="small"
+      left-label-color="red"
+      left-value="false"
+      right-value="true"
+      right-label-color="green">
+    </toggle-switch-directive>
+  </span>
+
+  <span class="col-xs-1 pull-right">
+    <i class="fa fa-info-circle fa-2x" ng-click="information()"></i>
+  </span>
+</div>

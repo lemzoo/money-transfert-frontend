@@ -1,0 +1,14 @@
+<div class="modal-body">
+  <h4>Créneau du <strong>{{event.start  | xinDate: 'medium' }}</strong> au <strong>{{event.end | xinDate: 'medium'}}</strong></h4>
+
+  <div ng-if="event.marge">
+    <hr>
+
+    <label class="label-control">Marge (minutes)</label>
+    <input type="number" class="form-control" ng-model="event.marge" disabled/>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <a class="btn btn-default go-to-resource" ng-click="close()">Fermer</a>
+</div>

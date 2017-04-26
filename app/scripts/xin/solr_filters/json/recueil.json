@@ -1,0 +1,289 @@
+[
+  {
+    "type": "text",
+    "label": "Identifiant du recueil dans le portail",
+    "field": "id",
+    "icon": "lock"
+  },
+  {
+    "type": "identifier",
+    "label": "Structure d'accueil ayant saisi le recueil",
+    "field": "structure_accueil",
+    "icon": "university",
+    "url": "sites?fq=type:StructureAccueil"
+  },
+  {
+    "type": "date",
+    "label": "Date de création du recueil",
+    "field": "doc_created"
+  },
+  {
+    "type": "date",
+    "label": "Date de transmission au GU",
+    "field": "date_transmission"
+  },
+  {
+    "type": "date",
+    "label": "Date d'enregistrement",
+    "field": "date_enregistrement"
+  },
+  {
+    "type": "identifier",
+    "label": "Statut du recueil",
+    "field": "statut",
+    "icon": "lock",
+    "choices": [
+      {
+        "id": "BROUILLON",
+        "libelle": "Brouillon"
+      },
+      {
+        "id": "PA_REALISE",
+        "libelle": "Premier accueil réalisé"
+      },
+      {
+        "id": "DEMANDEURS_IDENTIFIES",
+        "libelle": "N° étranger attribué"
+      },
+      {
+        "id": "EXPLOITE",
+        "libelle": "Demande d'asile enregistrée"
+      },
+      {
+        "id": "ANNULE",
+        "libelle": "Recueil annulé"
+      }
+    ]
+  },
+  {
+    "type": "date",
+    "label": "Date d'annulation",
+    "field": "date_annulation"
+  },
+  {
+    "type": "identifier",
+    "label": "Motif d'annulation",
+    "field": "motif_annulation",
+    "icon": "lock",
+    "choices": [
+      {
+        "id": "NON_PRESENTATION_RDV",
+        "libelle": "Non présentation au rendez-vous"
+      },
+      {
+        "id": "BESOIN_INFORMATION_COMPLEMENTAIRE",
+        "libelle": "Besoin d'informations complémentaires"
+      },
+      {
+        "id": "INTERPRETE_NON_DISPONIBLE",
+        "libelle": "Interprète non disponible"
+      },
+      {
+        "id": "RETARD_PRESENTATION_DEMANDEUR",
+        "libelle": "Retard"
+      },
+      {
+        "id": "PANNE_INFORMATIQUE",
+        "libelle": "Panne informatique"
+      },
+      {
+        "id": "FAIT_EXTERIEUR",
+        "libelle": "Fait extérieur"
+      },
+      {
+        "id": "ECHEC_PRISE_EMPREINTE",
+        "libelle": "Echec de prise d'empreintes"
+      },
+      {
+        "id": "AUTRE",
+        "libelle": "Autre"
+      }
+    ]
+  },
+  {
+    "type": "date",
+    "label": "Date de rendez-vous",
+    "field": "rendez_vous_gu_date"
+  },
+  {
+    "type": "identifier",
+    "label": "Motif du rendez-vous",
+    "field": "rendez_vous_gu_motif",
+    "icon": "lock",
+    "choices": [
+      {
+        "id": "PREMIER_RDV_GU",
+        "libelle": "Premier rendez-vous au GU"
+      },
+      {
+        "id": "ECHEC_PRISE_EMPREINTES",
+        "libelle": "Echec de la prise d'empreintes"
+      },
+      {
+        "id": "DOSSIER_A_COMPLETER",
+        "libelle": "Dossier à compléter"
+      },
+      {
+        "id": "ATTENTE_REPONSE_DUBLIN",
+        "libelle": "En attente de réponse EM Dublin"
+      },
+      {
+        "id": "ATTENTE_RETOUR_SIRENE_FRANCE",
+        "libelle": "En attente de retour SIRENE France"
+      },
+      {
+        "id": "RETARD_DEMANDEUR",
+        "libelle": "Retard du demandeur"
+      }
+    ]
+  },
+  {
+    "type": "identifier",
+    "label": "Profil de demande",
+    "field": "profil_demande",
+    "icon": "lock",
+    "choices": [
+      {
+        "id": "MINEUR_ISOLE",
+        "libelle": "Mineur isolé"
+      },
+      {
+        "id": "MINEUR_ACCOMPAGNANT",
+        "libelle": "Mineur accompagnant"
+      },
+      {
+        "id": "ADULTE_ISOLE",
+        "libelle": "Majeur isolé"
+      },
+      {
+        "id": "FAMILLE",
+        "libelle": "Famille"
+      }
+    ]
+  },
+  {
+    "type": "text",
+    "label": "Numéro Eurodac",
+    "field": "identifiant_eurodac",
+    "icon": "key",
+    "phonetisable":
+      {
+        "show": false,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Numéro étranger",
+    "field": "usagers_identifiant_agdref",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": false,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Nom de l'usager",
+    "field": "usagers_nom",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Nom d'usage de l'usager",
+    "field": "usagers_nom_usage",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Prenom de l'usager",
+    "field": "usagers_prenoms",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Email de l'usager",
+    "field": "usagers_email",
+    "icon": "at"
+  },
+  {
+    "type": "date",
+    "label": "Date de naissance de l'usager",
+    "field": "usagers_date_naissance"
+  },
+  {
+    "type": "identifier",
+    "label": "Nationalité de l'usager",
+    "field": "usagers_nationalites",
+    "icon": "flag",
+    "url": "referentiels/nationalites"
+  },
+  {
+    "type": "identifier",
+    "label": "Pays de naissance de l'usager",
+    "field": "usagers_pays_naissance",
+    "icon": "map-marker",
+    "url": "referentiels/pays"
+  },
+  {
+    "type": "identifier",
+    "label": "Langue de l'usager",
+    "field": "usagers_langues",
+    "icon": "language",
+    "url": "referentiels/langues_iso639_2"
+  },
+  {
+    "type": "address",
+    "label": "Adresse de l'usager",
+    "field": "usagers_adresses",
+    "icon": "map-marker"
+  },
+  {
+    "type": "date",
+    "label": "Date de départ",
+    "field": "usagers_date_depart"
+  },
+  {
+    "type": "date",
+    "label": "Date d'entrée en France",
+    "field": "usagers_date_entree_en_france"
+  },
+  {
+    "type": "text",
+    "label": "Nom du représentant légal de l'usager",
+    "field": "usagers_representant_legal_nom",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Prenom du représentant légal de l'usager",
+    "field": "usagers_representant_legal_prenom",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  }
+]

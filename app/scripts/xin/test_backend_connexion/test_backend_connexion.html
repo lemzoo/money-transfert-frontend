@@ -1,0 +1,8 @@
+<div class="container" ng-if="backendIsDown">
+  <h1>Problème de connexion</h1>
+  <p>Impossible de communiquer avec le serveur. Vérifiez votre connexion internet ou contactez votre administrateur.</p>
+</div>
+
+<div ng-if="!backendIsDown">
+	<ng-transclude></ng-transclude>
+</div>

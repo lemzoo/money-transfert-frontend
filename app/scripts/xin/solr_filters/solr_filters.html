@@ -1,0 +1,44 @@
+<div class="list-group">
+  <div class="row">
+    <div class="col-xs-10">
+        <input ng-model="solr.q" class="form-control search-field"
+               placeholder="Filtrer...">
+    </div>
+
+    <div class="col-xs-2">
+        <select class="form-control per-page-field" ng-model="lookup.per_page">
+          <option value="12">12 résultats</option>
+          <option value="24">24 résultats</option>
+          <option value="48">48 résultats</option>
+          <option value="96">96 résultats</option>
+        </select>
+    </div>
+  </div>
+
+  </br>
+  <div class="row" ng-show="avancedFilters">
+    <div class="col-xs-4">
+      <select-referential-directive
+        model_listener="filters"
+        label="'Recherche avancée'"
+        model="filters.selectedId"
+        several="true"
+        icon="'filter'"
+        choices="filters.selectable"
+        last_splice_index="filters.lastSpliceIndex"
+        placeholder="'Filtre'">
+      </select-referential-directive>
+    </div>
+
+    <div class="col-xs-8">
+      <label class="label-control">Filtre(s)</label>
+      <div ng-repeat="(id, filter) in filters.selected">
+        <div solr-avanced-filter-directive solr="solr.filters[id]" filter="filter"> </div>
+      </div>
+    </div>
+
+    <div ng-show="error_json && error_json != ''">
+      <strong class="alert alert-danger">{{error_json}}</strong></br>
+    </div>
+  </div>
+</div>

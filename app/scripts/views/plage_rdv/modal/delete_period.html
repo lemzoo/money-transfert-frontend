@@ -1,0 +1,42 @@
+<div class="modal-body">
+  <h4>Suppression de créneaux</h4>
+  <hr>
+
+  <div>
+    <label class="label-control">Supprimer une journée</label>
+    <input type="radio" value="day" name="suppression-type" ng-model="suppression_type" />
+    <br>
+    <label class="label-control">Supprimer une période</label>
+    <input type="radio" value="period" name="suppression-type" ng-model="suppression_type" />
+
+    <div ng-show="suppression_type == 'day'">
+      <hr>
+      <date-text-input-directive
+        label="'Date à supprimer'"
+        active="true"
+        model="day_to_suppress">
+      </date-text-input-directive>
+    </div>
+
+    <div ng-show="suppression_type == 'period'">
+      <hr>
+      <date-text-input-directive
+        label="'Date de début'"
+        active="true"
+        model="date_begin_to_suppress"
+        with_hour="true">
+      </date-text-input-directive>
+      <date-text-input-directive
+        label="'Date de fin'"
+        active="true"
+        model="date_end_to_suppress"
+        with_hour="true">
+      </date-text-input-directive>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <a class="btn btn-default go-to-list" ng-click="cancel()">Annuler</a>
+  <a class="btn btn-danger go-to-resource" ng-click="deleteCreneaux()">Supprimer les créneaux</a>
+</div>

@@ -1,0 +1,62 @@
+<div class="navigationbar" class="container">
+  <ul class="navigation-list nav nav-pills nav-justified list-group">
+    <li class="list-group-item no-padding">
+      <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><strong><span class="nav-title">Navigation</span> <span class="caret"></strong></span></a>
+      <ul class="dropdown-menu">
+        <li class="col-sm-12 nav-accueil">
+          <a href="#/accueil"><i class="fa fa-lg fa-home"></i> Accueil</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/utilisateurs') != -1" class="col-sm-12 nav-utilisateurs">
+          <a href="#/utilisateurs"><i class="fa fa-lg fa-users"></i> Utilisateurs</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/sites') != -1" class="col-sm-12 nav-sites">
+          <a href="#/sites"><i class="fa fa-lg fa-university"></i> Sites</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/orchestration-echanges') != -1" class="col-sm-12 nav-webhooks">
+          <a href="#/orchestration-echanges"><i class="fa fa-lg fa-share-alt"></i> Orchestration des échanges</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/orchestration-echanges-rabbit') != -1"
+            ng-show="ff_broker_rabbit"
+            class="col-sm-12 nav-webhooks-rabbit">
+          <a href="#/orchestration-echanges-rabbit"><i class="fa fa-lg fa-share-alt"></i> Orchestration des échanges V2</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/parametrage') != -1" class="col-sm-12 nav-parametrage">
+          <a href="#/parametrage"><i class="fa fa-lg fa-cog"></i> Paramétrage</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/plages-rdv') != -1" class="col-sm-12 nav-plages-rdv">
+          <a href="#/plages-rdv"><i class="fa fa-lg fa-calendar"></i> Plages de rendez-vous</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/premier-accueil') != -1" class="col-sm-12 nav-premier-accueil">
+          <a href="#/premier-accueil?statut=BROUILLON"><i class="fa fa-lg fa-folder-open-o"></i> Premier accueil</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/gu-enregistrement') != -1" class="col-sm-12 nav-gu-enregistrement">
+          <a href="#/gu-enregistrement?statut=(PA_REALISE OR DEMANDEURS_IDENTIFIES)&planning"><i class="fa fa-lg fa-camera-retro"></i> GU Enregistrement</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/attestations') != -1" class="col-sm-12 nav-attestations">
+          <a href="#/attestations"><i class="fa fa-lg fa-print"></i> Edition d'attestation</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/demandes-asiles') != -1" class="col-sm-12 nav-demandes-asiles">
+          <a href="#/demandes-asiles"><i class="fa fa-lg fa-file-o"></i> Demandes d'asile</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/usagers') != -1" class="col-sm-12 nav-usagers">
+          <a href="#/usagers"><i class="fa fa-lg fa-users"></i> Usagers</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/transfert-de-dossier') != -1" class="col-sm-12 nav-transfert-de-dossier">
+          <a href="#/transfert-de-dossier"><i class="fa fa-lg fa-reply-all"></i> Transfert de dossier</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/historique-telem-ofpra') != -1" class="col-sm-12 nav-historique-telemofpra">
+          <a href="#/historique-telem-ofpra"><i class="fa fa-lg fa-eye"></i> Historique accès Telem Ofpra</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/extractions-base') != -1" class="col-sm-12 nav-extractions-base">
+          <a href="#/extractions-base"><i class="fa fa-lg fa-file-excel-o"></i> Extractions base de données</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/indicateurs-pilotage') != -1" class="col-sm-12 nav-indicateurs-pilotage">
+          <a href="#/indicateurs-pilotage"><i class="fa fa-lg fa-file-excel-o"></i> Indicateurs de pilotage</a>
+        </li>
+        <li ng-if="PERMISSIONS[user.role].indexOf('/remise-titres') != -1" class="col-sm-12 nav-remise-titres">
+          <a href="#/remise-titres"><i class="fa fa-lg fa-id-card-o"></i> Remise de titres</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>

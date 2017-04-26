@@ -1,0 +1,169 @@
+<div class="actionbar container affix">
+  <div class="row">
+    <div class="col-md-2">
+      <navigationbar-directive></navigationbar-directive>
+    </div>
+    <div class="col-md-10">
+      <div class="buttonbar" ng-init="haveFilters = false">
+        <a class="btn btn-primary pull-right" ng-show="!avancedFilters" ng-click="avancedFilters = true">
+          <i class="glyphicon glyphicon-filter" ng-show="haveFilters"></i>Afficher la recherche avancée
+        </a>
+        <a class="btn btn-primary pull-right" ng-show="avancedFilters" ng-click="avancedFilters = false">Cacher la recherche avancée</a>
+        <div class="pull-right btn-group">
+          <button class="pause-queue btn btn-primary dropdown-toggle"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Sélectionner tous les messages <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="javascript:void(0)" ng-click="selectAll('deletable')">qui peuvent être supprimés</a></li>
+            <li><a href="javascript:void(0)" ng-click="selectAll('cancellable')">qui peuvent être annulés</a></li>
+            <li><a href="javascript:void(0)" ng-click="selectAll('repeatable')">qui peuvent être rejoués</a></li>
+          </ul>
+        </div>
+        <span class="pull-right">
+          <label class="label-control">Rafraichissement</label>
+          <span toggle-switch-directive
+            ng-model="auto_refresh_messages"
+            switch-size="small"
+            left-label="Off"
+            right-label="On"
+            left-value="false"
+            right-value="true"
+            left-label-color="#a2a2a2"
+            right-label-color="royalblue">
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+<div class="content container">
+  <div class="row">
+    <div class="col-md-2 left-content">
+      <div class="list-group sidebar panel-group">
+        <a ng-repeat="(key, value) in STATUS_LIST"
+           class="list-group-item"
+           ng-class="{{key}}? 'active':''"
+           href="#/orchestration-echanges-rabbit/{{queue.queue}}?{{value}}">
+          {{value}}<span class="badge">{{messageCount[value]}}</span>
+        </a>
+        <a class="list-group-item"
+           ng-class="!(RETRY || FAILURE || CANCELLED || DELETED || SKIPPED || DONE)? 'active': ''"
+           href="#/orchestration-echanges-rabbit/{{queue.queue}}">
+          ALL<span class="badge">{{messageCount['ALL']}}</span>
+        </a>
+      </div>
+    </div>
+    <div class="col-md-10 right-content">
+      <div class="container">
+        <div class="row">
+          <div class="buttonbar">
+            <sc-button ng-show="showReplayAllButton"
+                       class="pause-queue btn btn-primary pull-right"
+                       ng-click="repeatAllMessages()"
+                       wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                       cancel-wait-for="replayAllDone"
+                       label="'Rejouer tous les messages'">
+            </sc-button>
+            <sc-button class="pause-queue btn btn-primary pull-right"
+                       ng-click="doOnSelectedMessages('repeat')"
+                       wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                       cancel-wait-for="replayDone"
+                       label="'Rejouer les messages sélectionnés'">
+            </sc-button>
+            <sc-button class="pause-queue btn btn-primary pull-right"
+                       ng-click="doOnSelectedMessages('delete')"
+                       wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                       cancel-wait-for="deleteDone"
+                       label="'Supprimer les messages sélectionnés'">
+            </sc-button>
+            <sc-button class="pause-queue btn btn-primary pull-right"
+                       ng-click="doOnSelectedMessages('cancel')"
+                       wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                       cancel-wait-for="cancelDone"
+                       label="'Annuler les messages sélectionnés'">
+            </sc-button>
+          </div>
+        </div>
+        <div class="row">
+          <form class="simple-form" novalidate name="webhookForm" ng-submit="saveWebhook()">
+
+            <div class="alert" role="alert" ng-show="info.show">
+              {{ info.message }}
+            </div>
+            <div class="alert alert-danger" ng-show="error">
+              {{ error.text }}
+            </div>
+
+            <div class="col-md-10">
+              <h3>Messages de la file <b>{{queue.queue}}</b></h3>
+              <hr align="left" />
+
+              <div class="col-md-12">
+                <div class="row">
+                  <div solr-filters-directive lookup="lookup" json="message" avanced-filters="avancedFilters" have-filters="haveFilters"></div>
+                </div>
+                <list-resource-directive resource-backend="resourceBackend" lookup="lookup" links="links"
+                                         custom-update-resources-list="computeResource" column-class-info="columnClassInfo"
+                                         custom-operation="customOperation(operation, data)" selected="selected">
+                  <div class="alert" role="alert" class="alert-success" ng-class="resource._alert_class">
+                    <h4 class="panel-title">
+                      <input type="checkbox" ng-model="$parent.selected[resource.id]"
+                        ng-click="customOperation({operation: 'select', data: {id: resource.id}})"
+                        ng-show="resource._can_repeat || resource._can_delete || resource._can_cancel">
+                      <a data-toggle="collapse" data-target="#collapse-msg-{{$index}}"
+                         aria-expanded="false" aria-controls="collapse-msg-{{$index}}">
+                        <strong>{{resource.handler}} - {{resource.created | xinDate:'medium'}} <i>[{{resource.status}}]</i></strong>
+                      </a>
+                      <span class="pull-right">
+                        <button type="button"
+                          ng-click="customOperation({operation: 'patch', data: {id: resource.id, context: resource._context}})"
+                          ng-show="resource._can_patch"
+                          class="btn btn-default btn-xs">Editer
+                        </button>
+                        <button type="button"
+                          ng-click="customOperation({operation: 'repeat', data: {id: resource.id}})"
+                          ng-show="resource._can_repeat"
+                          class="btn btn-default btn-xs">Rejouer
+                        </button>
+                        <button type="button"
+                          ng-click="customOperation({operation: 'cancel', data: {id: resource.id}})"
+                          ng-show="resource._can_cancel"
+                          class="btn btn-default btn-xs">Annuler
+                        </button>
+                        <button type="button"
+                          ng-click="customOperation({operation: 'delete', data: {id: resource.id}})"
+                          ng-show="resource._can_delete"
+                          class="btn btn-default btn-xs">Supprimer
+                        </button>
+                      </span>
+                    </h4>
+                    <div class="show-message collapse" id="collapse-msg-{{$index}}">
+                      <label>Id :</label> {{resource.id}}<br/>
+                      <label>Discriminant :</label> {{resource.discriminant}}<br/>
+                      <label>Création :</label> {{resource.created | xinDate:'medium'}}<br/>
+                      <div ng-show="resource.processed">
+                        <label>Traitement :</label> {{resource.processed | xinDate:'medium'}}
+                      </div>
+                      <div ng-show="resource.status_comment">
+                        <label>Status</label>
+                        <div class="well" style="white-space: pre-wrap;">{{resource.status_comment}}</div>
+                      </div>
+                      <div ng-show="resource.json_context">
+                        <label>Context</label>
+                        <i ng-show="resource._invalid_context" class="fa fa-lg fa-warning json-invalid"> Document json invalide</i>
+                        <div class="well" style="white-space: pre-wrap;">{{resource._context}}</div>
+                      </div>
+                    </div>
+                  </div>
+                </list-resource-directive>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

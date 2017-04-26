@@ -1,0 +1,41 @@
+<select-referential-directive
+  model_listener="accreditation"
+  label="'Role associé *'"
+  model="role"
+  ref_disabled="accreditation.mode != 'create'"
+  icon="'lock'"
+  error_model="accreditation._errors.role"
+  choices="selectRoles"
+  placeholder="''">
+</select-referential-directive>
+
+<div ng-if="site_associated">
+  <select-referential-directive
+    model_listener="accreditation"
+    label="'Site affecté *'"
+    model="accreditation.data.site_affecte"
+    ref_disabled="siteLocked || accreditation.mode != 'create'"
+    icon="'university'"
+    error_model="accreditation._errors.site"
+    url="sites_url"
+    placeholder="">
+  </select-referential-directive>
+
+  <div class="panel panel-default" ng-if="site.libelle && accreditation.mode != 'create'">
+    <div class="panel-body">
+      <strong>{{site.libelle}}</strong> <i>({{settingsSites[site.type]}})</i>
+      <div ng-if="site.telephone">
+        <i class="fa fa-lg fa-phone"></i>&nbsp;&nbsp;{{site.telephone}}
+      </div>
+      <div ng-if="site.email">
+        <i class="fa fa-lg fa-at"></i>&nbsp;&nbsp;{{site.email}}
+      </div>
+      <div ng-if="site.adresse.voie">
+        <i class="fa fa-lg fa-envelope-o"></i>&nbsp;&nbsp;{{site.adresse.numero_voie}} {{site.adresse.voie}}, {{site.adresse.ville}} {{site.adresse.code_postal}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="alert alert-block alert-warning" ng-if="accreditation.data.fin_validite && !accreditation_inactif">Cette habilitation sera désactivée le {{ accreditation.data.fin_validite | xinDate: 'shortDate' : '+0000' }}</div>
+<div class="alert alert-block alert-danger" ng-if="accreditation_inactif">Habilitation désactivée le {{ accreditation.data.fin_validite | xinDate: 'shortDate' : '+0000' }}</div>

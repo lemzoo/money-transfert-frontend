@@ -1,0 +1,12 @@
+<div class="modal-body">
+  <div class="form-group">
+    <label class="label-control"><i class="fa fa-exclamation-triangle fa-lg"></i> Messages exclus de l'opération en cours</label><br />
+    <div ng-repeat="msg in excludedMessages">
+       - message {{msg.id}} : {{msg.handler}} - {{msg.created | xinDate:'medium'}}
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <a class="btn btn-primary go-to-resource" ng-click="ok()">OK</a>
+</div>

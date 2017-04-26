@@ -1,0 +1,13 @@
+<div class="modal-body">
+  <div class="form-group">
+    <label class="label-control">Contexte à corriger</label><br />
+    <textarea ng-model="context" class="form-control" rows="20">
+      {{context}}
+    </textarea>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <a class="btn btn-default" ng-click="cancel()">Annuler</a>
+  <a class="btn btn-primary go-to-resource" ng-click="patch()">Corriger le contexte</a>
+</div>

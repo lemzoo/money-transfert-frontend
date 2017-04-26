@@ -1,0 +1,28 @@
+@media print {
+	body * {
+	  visibility: hidden;
+	}
+
+	.actionbar {
+		visibility: hidden;
+	}
+
+	#navbar.affix {
+		display: none;
+	}
+
+	#printSection, #printSection * {
+	  visibility: visible;
+	}
+
+	#printSection {
+	  position: absolute;
+	  left: 0;
+	  top: 0;
+	}
+
+	.page {
+		page-break-after: always;
+	}
+
+}

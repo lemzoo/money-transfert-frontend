@@ -1,0 +1,26 @@
+<div ng-show="!loading">
+  <div ng-show="resources.length != 0">
+
+    <div class="col-sm-12 text-right">
+      <dir-pagination-controls boundary-links="true" on-page-change="pageChange(newPageNumber)"></dir-pagination-controls>
+    </div>
+    <div style="display: block">
+      <div class="{{columnClassInfo}}"  dir-paginate="resource in resources | itemsPerPage: lookup.per_page"
+        total-items="resources._meta.total" current-page="resources._meta.page">
+        <div compile="resourceTemplate"></div>
+      </div>
+    </div>
+    <div class="col-sm-12 text-right">
+      <dir-pagination-controls boundary-links="true" on-page-change="pageChange(newPageNumber)"></dir-pagination-controls>
+    </div>
+  </div>
+
+  <div ng-if="resources.length == 0" class="text-center">
+    <h3><i>Pas de résultats</i></h3>
+  </div>
+</div>
+
+<div ng-if="loading">
+  <center><img src="images/spinner.gif"></img></center>
+  <center>Chargement...</center>
+</div>

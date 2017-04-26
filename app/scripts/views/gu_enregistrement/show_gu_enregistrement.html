@@ -1,0 +1,311 @@
+<div class="actionbar container affix">
+  <div class="row">
+    <div class="col-md-2">
+      <navigationbar-directive></navigationbar-directive>
+    </div>
+    <div class="col-md-10">
+      <div class="buttonbar">
+        <div ng-if="premier_accueil_to_gu || recueil_da.statut=='PA_REALISE'">
+          <sc-button class="btn btn-primary pull-right"
+                     ng-click="saveRecueil()"
+                     wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                     cancel-wait-for="saveDone"
+                     ng-if="PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') != -1"
+                     label="'Sauvegarder'">
+          </sc-button>
+          <sc-button class="btn btn-danger pull-right"
+                     ng-click="validateRecueil()"
+                     wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                     cancel-wait-for="validateDone"
+                     ng-show="!premier_accueil_to_gu &&
+                              PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') != -1 &&
+                              all_eurodac_attrib"
+                     label="'Sauvegarder et valider l\'état civil des demandeurs'">
+          </sc-button>
+          <sc-button ng-show="!premier_accueil_to_gu &&
+                              PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') != -1 &&
+                              !all_eurodac_attrib"
+                     class="btn btn-success pull-right"
+                     wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                     ng-click="validateEuroDacNumberRecueil()"
+                     cancel-wait-for="eurodacDone"
+                     label="'Générer numéro Eurodac'">
+          </sc-button>
+          <a href="#/gu-enregistrement/{{recueil_da.id}}/rendez-vous"
+             ng-if="!premier_accueil_to_gu &&
+                    (recueil_da.statut == 'PA_REALISE' || recueil_da.statut == 'DEMANDEURS_IDENTIFIES') &&
+                    PERMISSIONS[user.role].indexOf('/gu-enregistrement/:recueilDaId/rendez-vous') != -1"
+             class="btn btn-primary pull-right">
+            Gérer le rendez-vous
+          </a>
+          <a href="#/gu-enregistrement/{{recueil_da.id}}/convocation"
+             ng-if="!premier_accueil_to_gu && recueil_da.rendez_vous_gu != undefined &&
+                    (recueil_da.statut == 'PA_REALISE' || recueil_da.statut == 'DEMANDEURS_IDENTIFIES')"
+             class="btn btn-primary pull-right">
+            Voir la convocation
+          </a>
+          <sc-button class="btn btn-success pull-right"
+                     ng-click="printRecueil()"
+                     wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                     cancel-wait-for="pdfDone"
+                     ng-if="!premier_accueil_to_gu && recueil_da.statut == 'PA_REALISE'"
+                     label="'Télécharger le recueil'"
+                     label-class="'fa fa-print'">
+          </sc-button>
+        </div>
+        <div ng-if="recueil_da.statut=='DEMANDEURS_IDENTIFIES'">
+          <sc-button class="btn btn-primary pull-right"
+                     ng-click="saveRecueil()"
+                     wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                     cancel-wait-for="saveDone"
+                     ng-show="PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') != -1"
+                     label="'Sauvegarder'">
+          </sc-button>
+          <sc-button class="btn btn-danger pull-right"
+                     ng-click="finishRecueil()"
+                     wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                     cancel-wait-for="validateDone"
+                     ng-show="PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') != -1"
+                     label="'Enregistrer le recueil'">
+          </sc-button>
+          <a href="#/gu-enregistrement/{{recueil_da.id}}/rendez-vous"
+             ng-if="(recueil_da.statut == 'PA_REALISE' || recueil_da.statut == 'DEMANDEURS_IDENTIFIES') &&
+                    PERMISSIONS[user.role].indexOf('/gu-enregistrement/:recueilDaId/rendez-vous') != -1"
+             class="btn btn-primary pull-right">
+            Gérer le rendez-vous
+          </a>
+          <a href="#/gu-enregistrement/{{recueil_da.id}}/convocation"
+             ng-if="recueil_da.statut == 'PA_REALISE' || recueil_da.statut == 'DEMANDEURS_IDENTIFIES'"
+             class="btn btn-primary pull-right">
+            Voir la convocation
+          </a>
+        </div>
+        <cancel-recueil-directive recueil-da="recueil_da"
+                                  error="errors._errors"
+                                  url-back="'#/gu-enregistrement'"
+                                  ng-show="!premier_accueil_to_gu &&
+                                           recueil_da.statut != 'ANNULE' &&
+                                           recueil_da.statut != 'BROUILLON' &&
+                                           recueil_da.statut != 'EXPLOITE' &&
+                                           PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') != -1">
+        </cancel-recueil-directive>
+      </div>
+    </div>
+  </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+<div class="content container">
+  <div class="row">
+    <div class="col-md-2 left-content"></div>
+    <div class="col-md-10 right-content">
+
+      <div class="container"
+           ng-if="!premier_accueil_to_gu && recueil_da.statut=='PA_REALISE' && all_eurodac_attrib">
+        <h3>Identification des demandeurs d'asile</h3>
+        <i>La validation des identités des demandeurs est définitive,
+           cela permet de leur attribuer un n° étranger</i>
+      </div>
+      <div class="container"
+           ng-if="!premier_accueil_to_gu && recueil_da.statut=='PA_REALISE' && !all_eurodac_attrib">
+        <h3>Génération des numéros Eurodac</h3>
+        <i>Vous allez générer un numéro EURODAC pour les demandeurs d'asile du recueil.
+           Une fois la génération faite, vous pourrez choisir les usagers existants</i>
+      </div>
+      <div class="container" ng-if="recueil_da.statut=='DEMANDEURS_IDENTIFIES'">
+        <h3>
+          Enregistrement des procédures et validations des identités des non demandeurs.
+        </h3>
+        <i>Cette étape va terminer l'enregistrement du recueil et créer les demandes d'asile correspondantes</i>
+      </div>
+      <div class="container" ng-if="premier_accueil_to_gu">
+        <h3>Nouveau recueil</h3>
+      </div>
+      <br>
+
+      <div class="form-group col-sm-12 thumbnail">
+        <div class="col-sm-6">
+          <label class="label-control">Profil de demande</label>
+          <input type="text" disabled="disabled" ng-value="profil_demande[recueil_da.profil_demande]" class="form-control" />
+        </div>
+        <div class="col-sm-6">
+          <label class="label-control">Statut du recueil</label>
+          <input type="text" disabled="disabled"
+                 ng-value="recueil_statut[recueil_da.statut]" class="form-control">
+        </div>
+      </div>
+
+      <div class="col-sm-12"></div>
+      <br><br>
+      <div class="clearfix"></div>
+
+      <div ng-if="premier_accueil_to_gu || recueil_da.statut=='PA_REALISE' ||
+                  (recueil_da.statut=='ANNULE' && !recueil_da.type_procedure)">
+        <ul class="alert alert-danger" ng-show="errors._errors.length">
+          <li ng-repeat="(key, error) in errors._errors track by key" style="margin-left: 1em;">
+            {{ error }}
+          </li>
+        </ul>
+        <div class="col-sm-12"></div>
+
+        <div class="clearfix"></div>
+
+        <button type="button" class="btn btn-primary" ng-show="hideUsagers" ng-click="hideUsagers = !hideUsagers">
+          <span class="glyphicon glyphicon-collapse-down"></span> Agrandir
+        </button>
+        <button type="button" class="btn btn-primary" ng-show="!hideUsagers" ng-click="hideUsagers = !hideUsagers">
+          <span class="glyphicon glyphicon-collapse-up"></span> Réduire
+        </button>
+        <div class="col-sm-12"></div>
+        <br><br>
+        <div class="clearfix"></div>
+
+        <div class="col-sm-12">
+          <div class="col-sm-6">
+            <usager-p_a_realise_directive
+              ng-if="usager_1.active"
+              type-usager="'usager1'"
+              adresse_reference="null"
+              pays-traverses-reference2="usager_2.pays_traverses"
+              usager="usager_1"
+              delete_button="false"
+              active_usager_research="recueil_da.statut=='PA_REALISE'"
+              recueil-statut="recueil_da.statut"
+              is_collapsed="hideUsagers"
+              search-id-enabled="searchIdEnabled"
+              u-disabled="PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') == -1">
+            </usager-p_a_realise_directive>
+          </div>
+          <div class="col-sm-6">
+            <span class="btn btn-primary pull-right"
+                  ng-show="!usager_2.active &&
+                           PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') != -1"
+                  ng-click="displayUsager2()">
+              Ajouter un second usager
+            </span>
+
+            <usager-p_a_realise_directive
+              ng-if="usager_2.active"
+              adresse_reference="usager_1.adresse"
+              pays-traverses-reference1="usager_1.pays_traverses"
+              type-usager="'usager2'"
+              usager="usager_2"
+              delete_button="true"
+              delete-me="deleteUsager"
+              active_usager_research="recueil_da.statut=='PA_REALISE'"
+              recueil-statut="recueil_da.statut"
+              is_collapsed="hideUsagers"
+              search-id-enabled="searchIdEnabled"
+              u-disabled="PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') == -1">
+            </usager-p_a_realise_directive>
+          </div>
+        </div>
+
+        <br />
+        <div class="clearfix"></div>
+        <div class="col-sm-12">
+          <div class="form-group col-sm-6" ng-repeat="enfant in enfants">
+            <usager-p_a_realise_directive
+              edit_location="edit_location"
+              adresse_reference="usager_1.adresse"
+              pays-traverses-reference1="usager_1.pays_traverses"
+              pays-traverses-reference2="usager_2.pays_traverses"
+              type-usager="'enfant'"
+              index-enfant="$index"
+              usager="enfant"
+              delete_button="true"
+              delete-me="deleteUsager"
+              active_usager_research="recueil_da.statut=='PA_REALISE'"
+              recueil-statut="recueil_da.statut"
+              is_collapsed="hideUsagers"
+              search-id-enabled="searchIdEnabled"
+              u-disabled="PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') == -1">
+            </usager-p_a_realise_directive>
+          </div>
+          <span class="btn btn-primary pull-right" ng-click="addChild()" style="margin-right:5px;"
+                ng-show="PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') != -1">
+            Ajouter un enfant
+          </span>
+        </div>
+        <br /><br /><br /><br /><br /><br />
+        <div class="clearfix"></div>
+      </div>
+
+      <div class="container"
+           ng-if="(recueil_da.statut!='PA_REALISE' && recueil_da.statut!='ANNULE') ||
+                  (recueil_da.statut=='ANNULE' && recueil_da.type_procedure)">
+        <ul class="alert alert-danger" ng-show="errors._errors.length">
+          <li ng-repeat="(key, error) in errors._errors track by key" tyle="margin-left: 1em;">
+            {{ error }}
+          </li>
+        </ul>
+        <div class="col-sm-12"></div>
+        <div class="col-sm-12">
+          <div class="col-sm-6">
+            <usager-demandeurs_identifies_directive
+              ng-if="usager_1.active"
+              type-usager="'usager1'"
+              adresse_reference="null"
+              pays-traverses-reference2="usager_2.pays_traverses"
+              u_disabled="recueil_da.statut != 'DEMANDEURS_IDENTIFIES' ||
+                          PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') == -1"
+              active_usager_research="recueil_da.statut=='DEMANDEURS_IDENTIFIES'"
+              recueil-statut="recueil_da.statut"
+              usager="usager_1"
+              delete_button="false">
+            </usager-demandeurs_identifies_directive>
+          </div>
+          <div class="col-sm-6">
+            <span class="btn btn-primary pull-right"
+                  ng-show="!usager_2.active && recueil_da.statut == 'DEMANDEURS_IDENTIFIES' &&
+                           PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') != -1"
+                  ng-click="displayUsager2()">Afficher le second usager
+            </span>
+            <usager-demandeurs_identifies_directive
+              adresse_reference="usager_1.adresse"
+              pays-traverses-reference1="usager_1.pays_traverses"
+              ng-if="usager_2.active"
+              u_disabled="recueil_da.statut != 'DEMANDEURS_IDENTIFIES' ||
+                          PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') == -1"
+              type-usager="'usager2'"
+              usager="usager_2"
+              active_usager_research="recueil_da.statut=='DEMANDEURS_IDENTIFIES'"
+              recueil-statut="recueil_da.statut"
+              delete_button="true"
+              delete-me="deleteUsager">
+            </usager-demandeurs_identifies_directive>
+          </div>
+        </div>
+
+        <br />
+        <div class="clearfix"></div>
+        <div class="col-sm-12">
+          <div class="form-group col-sm-6" ng-repeat="enfant in enfants">
+            <usager-demandeurs_identifies_directive
+              adresse_reference="usager_1.adresse"
+              pays-traverses-reference1="usager_1.pays_traverses"
+              pays-traverses-reference2="usager_2.pays_traverses"
+              edit_location="edit_location"
+              u_disabled="recueil_da.statut != 'DEMANDEURS_IDENTIFIES' ||
+                          PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') == -1"
+              type-usager="'enfant'"
+              index-enfant="$index"
+              usager="enfant"
+              active_usager_research="recueil_da.statut=='DEMANDEURS_IDENTIFIES'"
+              recueil-statut="recueil_da.statut"
+              delete_button="true"
+              delete-me="deleteUsager">
+            </usager-demandeurs_identifies_directive>
+          </div>
+          <span class="btn btn-primary pull-right" ng-click="addChild()"
+                ng-show="recueil_da.statut == 'DEMANDEURS_IDENTIFIES' &&
+                         PERMISSIONS[user.role].indexOf('modifier_gu-enregistrement') != -1"
+                style="margin-right:5px;">Ajouter un enfant
+          </span>
+        </div>
+        <br /><br /><br /><br /><br /><br />
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>

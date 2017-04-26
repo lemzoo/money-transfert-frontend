@@ -1,0 +1,232 @@
+dev:
+- t5188: Configuration du module d'authentification unifié
+- t5007 : Ajout de la possibilité d'éditer et imprimer un demande d'asile
+- t5077 : Problème lors de l'application d'un template créneau. (problème fuseau horaire)
+- t567: Multirole
+- Ajout nouveau role GESTIONNAIRE_DE_TITRES
+- Ajout check status du timbre TTE
+- t5042: Ajout des guides utilisateur
+
+1.5.4:
+- t5078 : le nombre d'enfants reste à '0' lors de la generation de la convocation au format PDF.
+- t5110 : add vulnerabilite mobilite reduite
+- t5121 : Set "Début de validité" and "Date de décision sur attestation" to today when "Renouvellement" or "Renouvellement ultérieur"
+
+1.5.3:
+- Eurodac
+- t635 : reexamen
+- t675 : view id approchante (fne/portail/fpr)
+- t685/t4996 : if procedure dublin to normal/acc => DA statut == prete edition attestation
+
+1.5.2:
+- t5067 : use municipality to get city on etalab
+
+1.5.1:
+- 4801: (motif_modif_rdv branch) add a new 'Motif demandeur' in the RDV gestion screen
+- t686: date_notification must be equal to date_decision_sur_attestation (init DA)
+
+1.5.0:
+- t682 : Check mandatory fields into Usager page + Fix error msg
+- t684/t4997 : Indicateur de pilotage => Change display
+- t691/t4992: Cannot create too many creneaux in same time.
+- t694/4803 : add SPA on convocation
+- t835/4777 : add vulnerabilite mobilite reduite
+- t839 : Add recueil cancellation reason
+- t2545: modification du message de la popup "paramétrer le site" dans "plages de rendes-vous"
+- t5034 : Display backend version
+- t5037 : add da introduction ofpra extraction
+- t5065 : Can not delete created creneaux. We must refresh page to do it.
+- t5066 : fix missing default values in plage rdv configuration
+- t5067 : use municipality to get city on etalab
+
+1.4.33:
+- fix bug re-edition edition
+- t666 : new indicateur (deleted creneaux)
+
+1.4.32:
+- t656 : Save "Modèle Quotidien / Hebdo" into DB
+- t681 : Show "droit/réédition informations" into user page
+- t683 : Auto select date_debut_validite value when reedit (equal last date_debut_validite)
+
+1.4.31:
+- t641 : Hide toggle switch 'adresse inconnue' (SitePage). site.AddressField is required by DNA.
+- t655 : add button to replay all messages
+
+1.4.30:
+- t687 : fix bug delete selected creneaux
+
+1.4.29:
+- t633 : Fix bug into SolrSearcher (Nom et Prenom du représentant légal de l'usager / address fields / query field)
+- t658 : change management of display requalifications on DA
+- t659 : fix display error on address field on first attestation
+- t661 : highlight da informations (Eloignement / Introduction OFPRA / Informations DUBLIN / Requalifications / Décisions définitives)
+- t662 : add auto selected date into date_notification (requalification)
+- t664 : Orchestration des échanges => fix bug with handleInputDate
+- t669 : Seep up plageRDV loading page
+- t670 : Fix bug with Pays_traversés (Brouillon with enfant1.pays_traversé != [] / GU with enfant1.demandeur == false)
+
+1.4.28:
+- t663 : Indicateur de pilotage => nombre de rendez-vous dans chaque GU par SPA
+
+1.4.27:
+- t673 : use BackendWithoutInterceptor for get usager into listDA
+
+1.4.26:
+- t663 : Indicateur de pilotage => nombre de rendez-vous dans chaque GU par SPA
+
+1.4.25:
+- t643 : Add error msg if duree_cren > duree_plage_rdv
+- t645 : diff add DA with DA from DNA reprise
+- t657 : added a confirm modal on 'cloturer' buttons
+- t668 : fix pays_exclus display
+- t671 : new extract conditions exceptionnelles accueil + new profil
+
+1.4.24:
+- t623 : extract droits resource
+
+1.4.23:
+- t621 : 2eme renouvellement => en renouvellement
+- t631 : keep webhook filters param into url
+- t651 : support nat and gest nat can extract final decisions
+
+1.4.22:
+- t604 : flush request when view change on creneaux + alert message if creneaux already exists
+- t613 : Add a select list for choose a site on 'plage des rendez-vous' for the 'support national' profile
+- t613 : Deleted the :siteId in /pages-rdv/:siteId, the siteId is now directly get from current user (user.site_affecte.id)
+- t613 : Remove buttons into usager page (supp nat + gest nat)
+- t630 : Added permission to 'indicateurs-pilotage' to the 'RESPONSABLE_GU_DT_OFII' profile
+
+1.4.21:
+- t579 : Add new solr filters (n°etranger attribué)
+- t586 : Orchestration des échanges. Bug with msg display.
+- t611 : add ID search (Orchestration des echanges)
+- t612 : Add buttons into orchestration echanges (Cancel and Delete selected msg).
+- t622 : Request Line is too large => call X sites by X sites foreach request + use facet.pivot into indicateur SPA
+
+1.4.20:
+- add system_account to users
+- t619 : fix text
+- t620 : fix text
+- t576 : add button to system account
+
+1.4.19:
+- t627 : add indicateurs to gestionnaire national
+
+1.4.18:
+- t601 : Remove disabled status of DA fields (date_entree_en_france and date_depart)
+- t602 : add new badge for ofpra requalification
+- t608 : add informations in the 'demande asile' section (Usagers page).
+- t590 / t614 : Add date input in extraction page (generate CSV from users / sites / DAs / recueils)
+- t618 : indicateurs access for Gestionnaire Asile Préfecture
+
+1.4.17:
+- t606 : profils indicateurs
+
+1.4.16:
+- t597 : Add Gestionnaire national
+- t603 : update PORTAIL address into DA page
+- t605 : fix is_minor calcul
+- t609 : cancel current request if day change on planning view
+
+1.4.15:
+- t571 : display all errors on top of screen
+- t593 : add new display into gu_enregistrement page (Planning display)
+- t598 : update error message on situation_familiale on PA
+- t600 : use fuseau horaire for rdv
+
+1.4.14:
+- t564 : fill address with last
+- t570 : add link from DA to usager
+- t572 : can reproduce pays traverses from usager 1 and 2
+- t573 : add icon to modify first names value
+- t575 : add alert on first and second renouvellement
+- rdv are take manualy
+
+1.4.13:
+- indicateurs : update indicateurs
+
+1.4.12:
+- t546 : display photo 1er accueil if exist
+- t558 : display error for mother/father, name/firstname
+- t569 : display date error message for requalification
+- t582 : display CAO on attestation
+
+1.4.11:
+- add system_account to users
+- init scope.lookup per_page and page to make only on query
+- feb036 : replace bool by int for rdv delay
+
+1.4.10:
+- t563 : new state deleted for messages
+
+1.4.9:
+- t538 : add conditions exceptionnelles d'accueil
+
+1.4.8:
+- t509 : hide nam/firstname if moral person
+- t561 : update select-referential-drt to display site into order
+
+1.4.7:
+- use cookie to save login email
+- t525 : use POST to change own password
+
+1.4.6:
+- t530 : update message if numero etranger already exist, remove identifiant_portail_agdref if usager exist
+
+1.4.5:
+- t448 : Hide partnairs address is none
+- t513 : update global error message
+- t524 : multiselect for messages
+
+1.4.4:
+- t483 : put back admin nat button to change pwd
+- t500 : Correct pwd indications
+- t510 : fix photo GU
+
+1.4.3:
+- t309 : Correct text for password + Update Expired PWD
+- issue-422 : Duplicated field (Langue OFPRA -> seeApprochant)
+- t490 : 403 when recueil with transfered usagers
+- t512 : Add cancel button on photo
+- fix version of grunt-usemin
+
+1.4.2:
+- t504: Create new role ("Superviseur des échanges" => Orchestration des échanges)
+
+1.4.1:
+  - t515 : disabled transfert between pref when file is from dn@
+
+1.4.0:
+  - feb022 : update pdf for final decision and change left menu
+  - t465 : allow close dublin
+  - feb006: Add indicateurs_pilotage
+  - fix ticket 198 and 481, add export for responsable national and not for support national
+  - fix ticket 485 : remove recueil export
+  - fix ticket 486 : partial export
+  - t369 : Correct bug with existing usager
+  - t491 : Update CSS (buttonbar)
+  - t492: Correct advance research for DA
+
+1.3.1:
+  - issue-425: Correct Typo (pop_up: save Recueil) Bis
+
+1.3.0:
+  - lodash : fix version 3.10.1
+  - Add animations on all buttons witch makes backend query
+  - t462: enable change usager address when civil state is valid
+  - All bubbles info when clic on fields
+  - issue-425: Correct Typo (pop_up: save Recueil)
+  - issue-451: Correct bug with auto-selected dates in Edit Attestation
+  - issue-487: Correct bug with auto-selected dates in renewal attestation
+
+1.2.0:
+  - issue-469 : Correct display plages RDV
+  - t357 : Correct fne_encountered and fne_matching variables
+  - t373 : FNE - too many results
+
+1.1.0:
+  - Add telemOfpra link
+  - Avoid 412 on recueil validation (GU)
+  - New solr filters
+  - Fixed display and typo
+  - Redirect a DA to DA screen, if we refresh attestation page after edition.

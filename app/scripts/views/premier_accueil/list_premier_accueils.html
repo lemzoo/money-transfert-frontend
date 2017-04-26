@@ -1,0 +1,95 @@
+<div class="actionbar container affix">
+    <div class="row">
+        <div class="col-md-2">
+            <navigationbar-directive></navigationbar-directive>
+        </div>
+        <div class="col-md-10">
+            <div class="buttonbar" ng-init="haveFilters = false">
+                <a class="btn btn-danger" href="#/premier-accueil/nouveau-recueil" ng-if="links.create_brouillon"><strong>Nouveau recueil</strong></a>
+                <a class="btn btn-primary pull-right" ng-show="!avancedFilters" ng-click="avancedFilters = true">
+                  <i class="glyphicon glyphicon-filter" ng-show="haveFilters"></i><strong>Afficher la recherche avancée</strong>
+                </a>
+                <a class="btn btn-primary pull-right" ng-show="avancedFilters" ng-click="avancedFilters = false"><strong>Cacher la recherche avancée</strong></a>
+            </div>
+        </div>
+    </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+
+<div class="content container">
+  <div class="row" ng-show="!site_affecte.id && !site_affecte.sans_limite">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8 alert alert-danger">
+      Vous ne possédez pas de site associé, merci de contacter votre administrateur.
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+  <div class="row" ng-show="site_affecte.id || site_affecte.sans_limite">
+    <div class="col-md-2 left-content">
+      <div class="list-group sidebar">
+        <a class="list-group-item {{brouillon_active}}" href="#/premier-accueil?statut=BROUILLON">Brouillon<span class="badge">{{brouillon_nbr}}</span></a>
+        <a class="list-group-item {{pa_realise_active}}" href="#/premier-accueil?statut=PA_REALISE">Premier accueil réalisé<span class="badge">{{pa_realise_nbr}}</span></a>
+        <a class="list-group-item {{demandeurs_identifies_active}}" href="#/premier-accueil?statut=DEMANDEURS_IDENTIFIES">N° étranger attribué<span class="badge">{{demandeurs_identifies_nbr}}</span></a>
+        <a class="list-group-item {{gu_exploite_active}}" href="#/premier-accueil?statut=EXPLOITE">Demande d'asile enregistrée<span class="badge">{{gu_exploite_nbr}}</span></a>
+        <a class="list-group-item {{annule_active}}" href="#/premier-accueil?statut=ANNULE">Recueil annulé<span class="badge">{{annule_nbr}}</span></a>
+        <a class="list-group-item {{all_active}}" href="#/premier-accueil">Tous les recueils<span class="badge">{{all_nbr}}</span></a>
+      </div>
+    </div>
+    <div class="col-md-10 right-content">
+
+      <div class="container">
+
+        <div solr-filters-directive lookup="lookup" json="recueil" avanced-filters="avancedFilters" have-filters="haveFilters"></div>
+
+        <list-resource-directive resource-backend="resourceBackend" lookup="lookup" links="links"
+                                 custom-update-resources-list="updateScope">
+          <div class="well-list" ng-mouseover="showPopover(resource.id)">
+            <div class="col-xs-2">
+              <a href="#/premier-accueil/{{resource.id}}">
+                <i class="fa fa-4x fa-folder-open-o"></i>
+              </a>
+            </div>
+            <div class="col-xs-10">
+              <div class="col-sm-12">
+                <strong>{{profil_demande[resource.profil_demande]}} -
+                  <a href="#/premier-accueil/{{resource.id}}">
+                    Recueil n°{{resource.id}}
+                  </a>
+                </strong>
+              </div>
+              <div class="col-sm-12">
+                Statut : <strong>{{recueil_statut[resource.statut]}}</strong>
+              </div>
+              <div class="col-sm-12">
+                Demandeur<span ng-show="resource.demandeursCount > 1">s</span> : <strong>{{resource.demandeurs}}</strong>
+              </div>
+            </div>
+          </div>
+          <div class="popover-list" ng-show="popoverIsVisible[resource.id]" ng-mouseleave="hidePopover(resource.id)">
+            <div class="col-xs-2">
+              <a href="#/premier-accueil/{{resource.id}}">
+                <i class="fa fa-4x fa-folder-open-o"></i>
+              </a>
+            </div>
+            <div class="col-xs-10">
+              <div class="col-sm-12">
+                <strong>{{profil_demande[resource.profil_demande]}} -
+                  <a href="#/premier-accueil/{{resource.id}}">
+                    Recueil n°{{resource.id}}
+                  </a>
+                </strong>
+              </div>
+              <div class="col-sm-12">
+                Statut : <strong>{{recueil_statut[resource.statut]}}</strong>
+              </div>
+              <div class="col-sm-12">
+                Demandeur<span ng-show="resource.demandeursCount > 1">s</span> : <strong>{{resource.demandeurs}}</strong>
+              </div>
+            </div>
+          </div>
+        </list-resource-directive>
+      </div>
+    </div>
+  </div>
+</div>

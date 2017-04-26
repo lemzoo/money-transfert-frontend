@@ -1,0 +1,86 @@
+<div class="actionbar container navbar-static-top affix">
+    <div class="row">
+        <div class="col-md-2">
+            <navigationbar-directive></navigationbar-directive>
+        </div>
+        <div class="col-md-10">
+            <div class="buttonbar" ng-init="haveFilters = false">
+                <a class="btn btn-primary pull-right" ng-show="!avancedFilters" ng-click="avancedFilters = true">
+                  <i class="glyphicon glyphicon-filter" ng-show="haveFilters"></i><strong>Afficher la recherche avancée</strong>
+                </a>
+                <a class="btn btn-primary pull-right" ng-show="avancedFilters" ng-click="avancedFilters = false"><strong>Cacher la recherche avancée</strong></a>
+            </div>
+        </div>
+    </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+<div class="content container">
+  <div class="row">
+    <div class="col-md-2 left-content">
+    </div>
+    <div class="col-md-10 right-content">
+
+      <div class="container-fluid">
+
+        <div solr-filters-directive lookup="lookup" json="telem-ofpra" avanced-filters="avancedFilters" have-filters="haveFilters"></div>
+
+        <list-resource-directive resource-backend="resourceBackend" lookup="lookup" links="links" custom-update-resources-list="computeResource">
+          <div class="well-list" ng-mouseover="showPopover(resource.id)">
+            <div class="col-xs-2">
+              <a href="">
+                <i class="fa fa-4x fa-eye"></i>
+              </a>
+            </div>
+            <div class="col-xs-10">
+              <div class="col-sm-12">
+                <strong>
+                    {{resource.prenom}} {{resource.nom}}
+                </strong>
+              </div>
+              <div class="col-sm-12">
+                <strong>{{resource.email}}</strong>
+              </div>
+              <div class="col-sm-12">
+                le <strong>{{resource.date_demande | xinDate: 'medium'}}</strong>
+              </div>
+              <div class="col-sm-12">
+                Demande d'asile : <strong>{{resource.demande_asile.id}}</strong>
+              </div>
+              <div class="col-sm-12">
+                Numéro Inerec : <strong>{{resource.identifiant_inerec}}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="popover-list" ng-show="popoverIsVisible[resource.id]" ng-mouseleave="hidePopover(resource.id)">
+            <div class="col-xs-2">
+              <a href="">
+                <i class="fa fa-4x fa-eye"></i>
+              </a>
+            </div>
+            <div class="col-xs-10">
+              <div class="col-sm-12">
+                <strong>
+                    {{resource.prenom}} {{resource.nom}}
+                </strong>
+              </div>
+              <div class="col-sm-12">
+                <strong>{{resource.email}}</strong>
+              </div>
+              <div class="col-sm-12">
+                le <strong>{{resource.date_demande | xinDate: 'medium'}}</strong>
+              </div>
+              <div class="col-sm-12">
+                Demande d'asile : <strong>{{resource.demande_asile.id}}</strong>
+              </div>
+              <div class="col-sm-12">
+                Numéro Inerec : <strong>{{resource.identifiant_inerec}}</strong>
+              </div>
+            </div>
+          </div>
+        </list-resource-directive>
+      </div>
+    </div>
+  </div>
+</div>

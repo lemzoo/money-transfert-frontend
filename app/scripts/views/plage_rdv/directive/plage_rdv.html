@@ -1,0 +1,47 @@
+<div ng-show="_errors.general" style="margin: 20px 0;">
+  <ul class="alert alert-danger">
+    {{ _errors.general }}
+    <li ng-repeat="error in _errors.plages" style="margin-left: 1em;">
+      {{ error }}
+    </li>
+  </ul>
+</div>
+
+<div ng-show="calendarCls.progressbar.status">
+  <h3>
+    <span class="fa fa-spinner fa-1 fa-pulse"></span> {{calendarCls.progressbar.status}} des créneaux.
+  </h3>
+  <progressbar class="progress-striped active" value="calendarCls.progressbar.value">
+    <span style="color:white; white-space:nowrap;">
+      {{calendarCls.progressbar.value}}%
+    </span>
+  </progressbar>
+</div>
+
+<div class="panel panel-default" ng-if="type == 'calendar'">
+  <div class="panel-heading" role="tab" id="heading-infos">
+    <h4 class="panel-title">
+      <i class="fa fa-calendar"></i>
+      <a data-toggle="collapse" href=".collapse-infos" aria-expanded="true" aria-controls="collapse">Informations</strong></a>
+    </h4>
+  </div>
+
+  <div class="collapse-infos panel-collapse collapse in" role="tabpanel" aria-labelledby="#heading-infos">
+    <div class="panel-body">
+      <div ng-show="calendarCls.creneaux_inf.length == 0">
+        Aucun créneau n'a été créé pour le moment.
+      </div>
+      <div ng-repeat="elt in calendarCls.creneaux_inf | orderBy:'day'">
+        <span>{{elt.date}}: {{elt.creneaux > 1 ? elt.creneaux + ' créneaux' : '1 créneau'}}</span>
+        (<span class="text-info">{{elt.creneaux - elt.reserve}} {{elt.creneaux - elt.reserve > 1 ? ' disponibles' : ' disponible'}} </span>
+        et
+        <span class="text-danger">{{elt.reserve}} {{elt.reserve > 1 ? ' réservés' : ' réservé'}}</span>)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="height: 100%">
+  <div ui-calendar="uiConfig" ng-model="calendarCls.eventSources" calendar="{{type}}">
+  </div>
+</div>

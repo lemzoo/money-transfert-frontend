@@ -1,0 +1,157 @@
+<div class="actionbar container affix">
+    <div class="row">
+        <div class="col-md-2">
+            <navigationbar-directive></navigationbar-directive>
+        </div>
+        <div class="col-md-10">
+          <div class="buttonbar">
+          </div>
+        </div>
+    </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+<div class="content container">
+  <div class="row">
+    <div class="col-md-2 left-content">
+    </div>
+    <div class="col-md-10 right-content">
+      <div class="container">
+        <div class="col-xs-12">
+          <h5 class="text-center col-xs-1">Du</h5>
+          <date-text-input-directive
+            class="col-xs-4"
+            active="true"
+            model="dateFrom"
+            origin_model="dateFrom"
+            popover_content="'ex: 15/07/2016'">
+          </date-text-input-directive>
+          <h5 class="text-center col-xs-1">au</h5>
+          <date-text-input-directive
+            class="col-xs-4"
+            active="true"
+            model="dateTo"
+            origin_model="dateTo"
+            popover_content="'ex: 15/07/2016'">
+          </date-text-input-directive>
+        </div>
+
+        <div ng-show="error" class="alert alert-danger">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{error}}
+        </div>
+      </div>
+
+      <div class="container-fluid">
+        <a style="display:block; cursor:pointer;"
+           ng-click="createCSV('usagers')"
+           ng-if="PERMISSIONS[user.role].indexOf('export-usagers') != -1">
+          <div class="col-md-3">
+            <div class="thumbnail block-accueil">
+              <i class="fa fa-5x fa-users icon-accueil"></i>
+              <hr />
+              <div class="caption">
+                <span class="title-accueil">Exporter les données<br />Usagers</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <div class="row-fluid">
+          <a style="display:block; cursor:pointer;"
+             ng-click="createCSV('sites')"
+             ng-if="PERMISSIONS[user.role].indexOf('export-sites') != -1">
+            <div class="col-md-3">
+              <div class="thumbnail block-accueil">
+                <i class="fa fa-5x fa-university icon-accueil"></i>
+                <hr />
+                <div class="caption">
+                  <span class="title-accueil">Exporter les données<br />Sites</span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a style="display:block; cursor:pointer;"
+             ng-click="createCSV('recueils_da')"
+             ng-if="PERMISSIONS[user.role].indexOf('export-recueils_da') != -1">
+            <div class="col-md-3">
+              <div class="thumbnail block-accueil">
+                <i class="fa fa-5x fa-camera-retro icon-accueil"></i>
+                <hr />
+                <div class="caption">
+                  <span class="title-accueil">Exporter les données<br />Recueils</span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a style="display:block; cursor:pointer;"
+             ng-click="createCSV('demandes_asile')"
+             ng-if="PERMISSIONS[user.role].indexOf('export-demandes_asile') != -1">
+            <div class="col-md-3">
+              <div class="thumbnail block-accueil">
+                <i class="fa fa-5x fa-file-o icon-accueil"></i>
+                <hr />
+                <div class="caption">
+                  <span class="title-accueil">Exporter les données<br />Demandes d'asile</span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a style="display:block; cursor:pointer;"
+             ng-click="createCSV('droits')"
+             ng-if="PERMISSIONS[user.role].indexOf('export-droits') != -1">
+            <div class="col-md-3">
+              <div class="thumbnail block-accueil">
+                <i class="fa fa-5x fa-file-o icon-accueil"></i>
+                <hr />
+                <div class="caption">
+                  <span class="title-accueil">Exporter les données<br />Droits</span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a style="display:block; cursor:pointer;"
+             ng-click="createCSV('demandes_asile/condition_exceptionnelle')"
+             ng-if="PERMISSIONS[user.role].indexOf('export-conditions_exceptionnelles_accueil') != -1">
+            <div class="col-md-3">
+              <div class="thumbnail block-accueil">
+                <i class="fa fa-5x fa-file-o icon-accueil"></i>
+                <hr />
+                <div class="caption">
+                  <span class="title-accueil">
+                    Exporter les conditions<br>exceptionnelles d'accueil
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a style="display:block; cursor:pointer;"
+             ng-click="createCSV('demandes_asile/en_attente_introduction_ofpra')"
+             ng-if="PERMISSIONS[user.role].indexOf('export-demandes_en_attente_introduction_ofpra') != -1">
+            <div class="col-md-3">
+              <div class="thumbnail block-accueil">
+                <i class="fa fa-5x fa-file-o icon-accueil"></i>
+                <hr />
+                <div class="caption">
+                  <span class="title-accueil">
+                    Exporter les demandes<br>en attente introduction OFPRA
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+      <div style="text-align: center;" ng-show="csv_spinner">
+        <h3>Génération du fichier CSV en cours...</h3>
+        <span class="fa fa-spinner fa-5x fa-pulse"></span>
+      </div>
+    </div>
+  </div>
+</div>

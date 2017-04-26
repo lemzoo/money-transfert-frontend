@@ -1,0 +1,27 @@
+<div>
+  <canvas width="350" height="400" style="border:1px solid #000000; cursor: pointer"></canvas>
+  <div style="position: relative; top: -360px; left: 300px; width: 44px; margin-bottom: -100px">
+    <a href="" ng-click="zoomIn()" style="display: block; width: 14px; margin-left: auto; margin-right: auto;">
+      <span class="glyphicon glyphicon-zoom-in"></span>
+    </a>
+    <a href="" ng-click="zoomOut()" style="display: block; width: 14px; margin-left: auto; margin-right: auto;">
+      <span class="glyphicon glyphicon-zoom-out"></span>
+    </a>
+    <a href="" ng-click="goUp()" style="display: block; width: 14px; margin-left: auto; margin-right: auto;">
+      <span class="glyphicon glyphicon-chevron-up"></span>
+    </a>
+    <div style="width: 100%; margin-left: auto; margin-right: auto">
+      <a href="" ng-click="goLeft()">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+      </a>
+      <a href="" ng-click="goRight()" style="float: right">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+      </a>
+    </div>
+    <a href="" ng-click="goDown()" style="display: block; width: 14px; margin-left: auto; margin-right: auto;">
+      <span class="glyphicon glyphicon-chevron-down"></span>
+    </a>
+  </div>
+  <a class="btn btn-primary" ng-click="validate()">Valider</a>
+  <a class="btn btn-warning" ng-click="cancel()">Annuler</a>
+</div>

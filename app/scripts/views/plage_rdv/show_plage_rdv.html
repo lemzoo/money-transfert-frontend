@@ -1,0 +1,108 @@
+<div class="actionbar container affix">
+  <div class="row">
+    <div class="col-md-2">
+      <navigationbar-directive></navigationbar-directive>
+    </div>
+    <div class="col-md-10">
+      <div class="buttonbar" ng-show="user.role != 'SUPPORT_NATIONAL'">
+        <button class="btn btn-primary pull-right" ng-click="configureSite()">Paramétrer le site</button>
+        <sc-button class="btn btn-danger pull-right"
+                   ng-click="deleteSelectedCren()"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="deleteSelectedCrenDone"
+                   label="'Supprimer les créneaux sélectionnés'">
+        </sc-button>
+        <sc-button class="btn btn-danger pull-right"
+                   ng-click="deletePeriodCren()"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="deletePeriodCrenDone"
+                   label="'Supprimer les créneaux sur une période'">
+        </sc-button>
+      </div>
+    </div>
+  </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+<div class="content container">
+  <div class="row" ng-if="user.role == 'SUPPORT_NATIONAL'">
+    <div class="col-sm-6">
+      <select-referential-directive
+        label="'Site *'"
+        model="site.seleted"
+        icon="'tags'"
+        url="'sites?fq=type:GU'">
+      </select-referential-directive>
+    </div>
+  </div>
+  <div class="row">
+    <div class="container">
+      <div class="buttonbar" ng-show="user.role != 'SUPPORT_NATIONAL'">
+        <button class="btn btn-primary" ng-click="configureModeles('QUOTIDIEN')">
+          Configurer un modèle quotidien
+        </button>
+        <button class="btn btn-primary" ng-click="configureModeles('HEBDOMADAIRE')">
+          Configurer un modèle hebdomadaire
+        </button>
+        <sc-button class="btn btn-primary"
+                   ng-click="applyDayTemplate()"
+                   ng-disabled="!modele.daySources.length"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="applyDayTemplateDone"
+                   label="'Appliquer le modèle quotidien'">
+        </sc-button>
+        <sc-button class="btn btn-primary"
+                   ng-click="applyWeekTemplate()"
+                   ng-disabled="!modele.weekSources.length"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="applyWeekTemplateDone"
+                   label="'Appliquer le modèle hebdomadaire'">
+        </sc-button>
+      </div>
+      <div ng-show="site.libelle != undefined">
+        <h3>{{site.libelle}}</h3>
+        <br>
+
+        <strong class="alert alert-success alert-block" ng-show="site.j_3">
+          La prise de rendez-vous dans ce site est limitée à 3 jours
+        </strong>
+        <strong class="alert alert-danger alert-block" ng-show="!site.j_3">
+          La prise de rendez-vous dans ce site peut être réalisée au delà des 3 jours
+        </strong>
+
+        <h3 ng-show="!actualiteShowed && actualites.length > 0 && user.role != 'SUPPORT_NATIONAL'">
+          <span class="btn btn-danger btn-lg" ng-click="showActualites()">
+            <i class="fa fa-plus"></i> Affichez les alertes ({{actualites.length}})
+          </span>
+        </h3>
+        <h3 ng-show="actualiteShowed && actualites.length > 0 && user.role != 'SUPPORT_NATIONAL'">
+          <span class="btn btn-danger btn-lg" ng-click="showActualites()">
+            <i class="fa fa-minus"></i> Fermez les alertes ({{actualites.length}})
+          </span>
+        </h3>
+
+        <div class="thumbnail" ng-show="actualiteShowed && actualites.length > 0">
+          <div ng-repeat="actualite in actualites" class="alert alert-danger">
+            <span ng-show="actualite.type=='ALERTE_GU_PLUS_CRENEAUX'">
+              Une tentative de prise de rendez-vous a échoué car aucun créneau n'était disponible pour le recueil n°{{actualite.contexte.document_lie.id}}.
+              <br />Date de la tentative : {{actualite._created | xinDate:'medium'}}<br />
+            </span>
+            <span ng-show="actualite.type=='ALERTE_GU_RDV_LIMITE_JRS'">
+              Le(s) créneau(x) suivant(s) a(ont) été réservé(s) au delà de trois jours dans le recueil n°{{actualite.contexte.document_lie.id}} :
+              <ul>
+                <li ng-repeat="creneau in actualite.creneaux">
+                  Du {{creneau.date_debut | xinDate: 'medium'}} au {{creneau.date_fin | xinDate: 'medium'}} <span ng-show="creneau.marge">(marge : {{creneau.marge}})</span>
+                </li>
+              </ul>
+              Date à laquelle la réservation a été faite : {{actualite._created | xinDate: 'medium'}}<br />
+            </span>
+            <button class="btn-default" ng-click="closeActualite(actualite._links.cloturer)">Ne plus afficher</button>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <plage-rdv-pf-directive calendar-cls="calendar" ng-if="calendar"></plage-rdv-pf-directive>
+    </div>
+  </div>
+</div>

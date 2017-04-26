@@ -1,0 +1,52 @@
+<div class="modal-body">
+  <div ng-repeat="usager in usagers">
+    <span class="fa fa-square-o" ng-show="usager.patchAll == 'waiting'"></span>
+    <span class="fa fa-spinner fa-pulse" ng-show="usager.patchAll == 'sending'"></span>
+    <span class="fa fa-check-square-o" ng-show="usager.patchAll == 'success'"></span>
+    <span class="fa fa-times" ng-show="usager.patchAll == 'failure'"></span>
+    <b>
+      <span ng-show="usager.type == 'usager_1'">Usager 1</span>
+      <span ng-show="usager.type == 'usager_2'">Usager 2</span>
+      <span ng-show="usager.type == 'enfant'">Enfant {{usager.index_enfant+1}}</span>
+    </b>
+    <ul>
+      <li>
+        <span class="fa fa-square-o" ng-show="usager.patchEtatCivil == 'waiting'"></span>
+        <span class="fa fa-spinner fa-pulse" ng-show="usager.patchEtatCivil == 'sending'"></span>
+        <span class="fa fa-check-square-o" ng-show="usager.patchEtatCivil == 'success'"></span>
+        <span class="fa fa-times" ng-show="usager.patchEtatCivil == 'failure'"></span>
+        Sauvegarde de l'état civil
+      </li>
+      <li>
+        <span class="fa fa-square-o" ng-show="usager.patchMoreInformations == 'waiting'"></span>
+        <span class="fa fa-spinner fa-pulse" ng-show="usager.patchMoreInformations == 'sending'"></span>
+        <span class="fa fa-check-square-o" ng-show="usager.patchMoreInformations == 'success'"></span>
+        <span class="fa fa-times" ng-show="usager.patchMoreInformations == 'failure'"></span>
+        Sauvegarde des informations complémentaires
+      </li>
+      <li>
+        <span class="fa fa-square-o" ng-show="usager.patchAddress == 'waiting'"></span>
+        <span class="fa fa-spinner fa-pulse" ng-show="usager.patchAddress == 'sending'"></span>
+        <span class="fa fa-check-square-o" ng-show="usager.patchAddress == 'success'"></span>
+        <span class="fa fa-times" ng-show="usager.patchAddress == 'failure'"></span>
+        Sauvegarde de l'adresse
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <span class="fa fa-square-o" ng-show="post_recueil == 'waiting'"></span>
+    <span class="fa fa-spinner fa-pulse" ng-show="post_recueil == 'sending'"></span>
+    <span class="fa fa-check-square-o" ng-show="post_recueil == 'success'"></span>
+    <span class="fa fa-times" ng-show="post_recueil == 'failure'"></span>
+    Sauvegarde du recueil
+  </div>
+
+  <div ng-if="action_switch == 'validate' || action_switch == 'finish'">
+    <span class="fa fa-square-o" ng-show="post_next_etat == 'waiting'"></span>
+    <span class="fa fa-spinner fa-pulse" ng-show="post_next_etat == 'sending'"></span>
+    <span class="fa fa-check-square-o" ng-show="post_next_etat == 'success'"></span>
+    <span class="fa fa-times" ng-show="post_next_etat == 'failure'"></span>
+    Passage du recueil à l'état suivant
+  </div>
+</div>

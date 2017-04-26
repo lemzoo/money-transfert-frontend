@@ -1,0 +1,109 @@
+<div class="form-group col-sm-12">
+
+  <div class="form-group" ng-if="location && canUnknown">
+    <label class="label-control">Adresse inconnue</label>
+    <span toggle-switch-directive
+      ng-model="location.adresse_inconnue"
+      left-label="Oui"
+      knob-label=""
+      right-label="Non"
+      switch-size="small"
+      left-label-color="red"
+      is-summarised="uDisabled"
+      left-value="true"
+      right-value="false"
+      right-label-color="royalblue">
+    </span>
+  </div>
+
+  <div class="input-group" ng-hide="location.adresse_inconnue">
+    <div class="input-group-addon"><i class="fa fa-lg fa-map-marker"></i></div>
+    <input type="search" class="form-control col-sm-6" ng-model="inputLocation" placeholder="Rechercher une adresse française à partir d'ETALAB..." ng-disabled="uDisabled" />
+  </div>
+
+  <div ng-show="error_etalab && error_etalab != ''">
+    <strong class="alert alert-danger">{{error_etalab}}</strong>
+  </div>
+  <div class="list-group" ng-model="inputLocation">
+    <a class="list-group-item" href=""
+       ng-repeat="searchLocation in searchLocations">
+      <div class="row" ng-click="clickLocation(searchLocation)">
+        <div class="col-xs-12 col-md-8">
+          <strong>{{searchLocation.properties.label}}</strong>
+          <br />
+          {{searchLocation.properties.context}}
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-sm-12" ng-hide="location.adresse_inconnue">
+    <div class="col-sm-12">
+      <label class="label-control">Chez</label>
+      <input ng-disabled="uDisabled" class="form-control" ng-model="location.chez" />
+    </div>
+    <div class="col-sm-12">
+      <label class="label-control">Complément</label>
+      <input ng-disabled="uDisabled" class="form-control" ng-model="location.complement" />
+    </div>
+    <div class="col-sm-12">
+      <label class="label-control">Numéro de voie</label>
+      <input ng-disabled="uDisabled" class="form-control" ng-model="location.numero_voie" />
+    </div>
+    <div class="col-sm-12">
+      <label class="label-control">Voie</label>
+      <input ng-disabled="uDisabled" class="form-control" ng-model="location.voie" />
+    </div>
+    <div class="col-sm-12">
+      <br />
+      <label class="label-control">Informations liées à la ville</label>
+
+      <div class="col-sm-12">
+        <div class="input-group">
+          <div class="input-group-addon"><i class="fa fa-lg fa-map-marker"></i></div>
+          <input ng-disabled="uDisabled" placeholder="Rechercher une ville à partir d'ETALAB" class="form-control" ng-model="ville_searcher" ng-click="startVille()" />
+        </div>
+      </div>
+      <div class="list-group">
+        <strong ng-show="error_ville && error_ville != ''" class="alert alert-danger">{{error_ville}}</strong>
+
+        <a class="list-group-item col-sm-12" href=""
+           ng-repeat="searchVille in searchVilles" ng-click="clickVille(searchVille)">
+          <div class="row">
+            <div class="col-xs-12 col-md-8">
+              <strong>{{searchVille.properties.label}}</strong> - {{searchVille.properties.postcode}}
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <br />
+      <div class="thumbnail col-sm-12">
+
+        <div class="col-sm-12">
+          <label class="label-control">Ville</label>
+          <input ng-disabled="uDisabled" class="form-control" ng-model="location.ville" readonly/>
+        </div>
+        <div class="col-sm-12">
+          <label class="label-control">Code Insee</label>
+          <input ng-disabled="uDisabled" class="form-control" ng-model="location.code_insee" readonly/>
+        </div>
+        <div class="col-sm-12">
+          <label class="label-control">Code Postal</label>
+          <input ng-disabled="uDisabled" class="form-control" ng-model="location.code_postal" />
+        </div>
+        <span ng-if="!uDisabled" style="margin-top: 5px;" ng-click="cleanVille()" class="pull-right btn btn-primary">Supprimer les informations de ville</span>
+      </div>
+    </div>
+    <div class="col-sm-12">
+      <select-referential-directive
+        model_listener="location.pays"
+        label="'Pays'"
+        model="location.pays.code"
+        icon="'map-marker'"
+        url="'referentiels/pays'"
+        placeholder="''"
+        ref_disabled="uDisabled">
+      </select-referential-directive>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,195 @@
+<div class="actionbar container affix">
+  <div class="row">
+    <div class="col-md-2">
+      <navigationbar-directive></navigationbar-directive>
+    </div>
+    <div class="col-md-10">
+      <div class="buttonbar">
+        <sc-button class="btn btn-primary pull-right"
+                   ng-click="saveSite()"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="saveDone"
+                   ng-if="canModifierSite && !site.site_inactif"
+                   label="'Sauvegarder'">
+        </sc-button>
+        <sc-button class="btn btn-danger pull-right"
+                   ng-click="closeSite()"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="closeDone"
+                   ng-if="!creation && canFermerSite && !site.date_fermeture"
+                   label="'Fermer le site'">
+        </sc-button>
+        <sc-button class="btn btn-primary pull-right"
+                   ng-click="reopenSite()"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="closeDone"
+                   ng-if="!creation && canFermerSite && site.date_fermeture"
+                   label="'Réouvrir le site'">
+        </sc-button>
+      </div>
+    </div>
+  </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+<div class="content container">
+  <div class="row">
+    <div class="col-md-2 left-content">
+    </div>
+    <div class="col-md-10 right-content">
+      <div class="container">
+        <div>
+          <h3>
+            <span ng-if="!site.type">Type de site</span>{{settingsSite[site.type]}} -
+            <span ng-if="!site.libelle">Libellé du site</span>{{site.libelle}}
+          </h3>
+          <span class="alert alert-danger col-sm-12" ng-if="site_inactif">
+            Site fermé le {{ site.date_fermeture | xinDate: 'shortDate' : '+0000' }}
+          </span>
+          <span class="alert alert-warning col-sm-12" ng-if="site.date_fermeture && !site_inactif">
+            Ce site sera fermé le {{ site.date_fermeture | xinDate: 'shortDate' : '+0000'}}
+          </span>
+        </div>
+
+        <form class="simple-form" novalidate name="siteForm" ng-submit="saveSite()">
+          <div class="alert alert-danger" ng-show="error.text">
+            {{ error.text }}
+          </div>
+
+          <div class="col-sm-12">
+            <div class="col-sm-5">
+              <h3>Contacts</h3>
+              <hr align="left" />
+              <div class="col-sm-12">
+                <simple-text-input-directive
+                  form_label="'Nom du site *'"
+                  form_icon="'bookmark'"
+                  form_ng_model="site.libelle"
+                  form_origin="origin_site.libelle"
+                  form_error="error.libelle"
+                  form_placeholder="''"
+                  form_name="'libelle'"
+                  form_disabled="(!creation && !canModifierSite) || site_inactif"
+                  form_popover="'ex: 95 Préfecture du Val d\'Oise'">
+                </simple-text-input-directive>
+
+                <simple-text-input-directive
+                  form_label="'Téléphone'"
+                  form_icon="'phone'"
+                  form_ng_model="site.telephone"
+                  form_origin="origin_site.telephone"
+                  form_error="error.telephone"
+                  form_placeholder="''"
+                  form_name="'telephone'"
+                  form_disabled="(!creation && !canModifierSite) || site_inactif"
+                  maxlength="22"
+                  form_popover="'ex: 01 34 20 95 95'">
+                </simple-text-input-directive>
+
+                <simple-text-input-directive
+                  form_label="'Email'"
+                  form_icon="'envelope'"
+                  form_ng_model="site.email"
+                  form_origin="origin_site.email"
+                  form_error="error.email"
+                  form_placeholder="''"
+                  form_name="'email'"
+                  form_disabled="(!creation && !canModifierSite) || site_inactif"
+                  form_popover="'ex: prefecture@val-oise.gouv.fr'">
+                </simple-text-input-directive>
+              </div>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-5">
+              <h3>Type et rattachements</h3>
+              <hr align="left" />
+              <select-referential-directive
+                model_listener="site"
+                label="'Type du site *'"
+                model="site.type"
+                ref_disabled="site.id || (!creation && !canModifierSite)"
+                icon="'tag'"
+                error_model="error.type"
+                choices="typesSite"
+                placeholder="''">
+              </select-referential-directive>
+
+              <div ng-show="site.type == 'StructureAccueil'" style="z-index: 2">
+                <select-referential-directive
+                  model_listener="site"
+                  label="'Guichet uniques *'"
+                  model="site.guichets_uniques"
+                  ref_disabled="uDisabled  || (!creation && !canModifierSite)"
+                  icon="'tags'"
+                  error_model="error.guichets_uniques"
+                  url="'sites?fq=type:GU'"
+                  several="true"
+                  placeholder="''">
+                </select-referential-directive>
+              </div>
+
+              <div style="z-index: 2;" ng-show="site.type == 'GU'">
+                <select-referential-directive
+                  model_listener="site"
+                  label="'Autorité de rattachement *'"
+                  model="site.autorite_rattachement.id"
+                  ref_disabled="uDisabled || (!creation && !canModifierSite)"
+                  icon="'tag'"
+                  error_model="error.autorite_rattachement"
+                  url="'sites?fq=type:Prefecture'"
+                  placeholder="'Ajouter une autorité de rattachement'">
+                </select-referential-directive>
+              </div>
+
+              <div style="z-index: 2;" ng-show="site.type == 'Prefecture'">
+                <simple-text-input-directive
+                  form_label="'Code département *'"
+                  form_icon="'bookmark'"
+                  form_ng_model="site.code_departement"
+                  form_origin="origin_site.code_departement"
+                  form_error="error.code_departement"
+                  form_placeholder="''"
+                  form_name="'code_departement'"
+                  form-disabled="!creation && !canModifierSite">
+                </simple-text-input-directive>
+              </div>
+
+              <div style="z-index: 2;" ng-show="site.type == 'EnsembleZonal'">
+                <select-referential-directive
+                  model_listener="site"
+                  label="'Préfectures appartenant à l\'ensemble zonal *'"
+                  model="site.prefectures"
+                  ref_disabled="uDisabled || (!creation && !canModifierSite)"
+                  icon="'tag'"
+                  error_model="error.prefectures"
+                  url="'sites?fq=type:Prefecture'"
+                  several="true"
+                  placeholder="'Ajouter une préfecture à l\'ensemble zonal'">
+                </select-referential-directive>
+              </div>
+
+            </div>
+          </div>
+
+
+          <div class="col-sm-11" style="z-index: 1">
+            <h3>Localisation *</h3>
+            <div class="alert alert-danger" ng-show="error.adresse">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+              {{ error.adresse }}
+            </div>
+            <hr align="left" />
+            <div class="form-group col-sm-12">
+              <input-location-directive
+                location="site.adresse"
+                can_unknown="false"
+                canEdit="!canModifierSite"
+                u_disabled="site_inactif || (!creation && !canModifierSite)">
+              </input-location-directive>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

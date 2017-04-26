@@ -1,0 +1,28 @@
+<div class="modal-body" ng-if="action_switch == 'save'">
+  Vous allez enregistrer le recueil.
+  <br />
+  Vous pourrez reprendre vos modifications plus tard.
+</div>
+
+<div class="modal-body" ng-if="action_switch == 'validate'">
+  Vous allez valider l'état civil des demandeurs d'asile afin de leur attribuer un n° étranger.
+  <br />
+  <strong>Une fois cette validation faite, vous ne pourrez plus modifier les demandeurs d'asile liés à ce recueil.</strong>
+</div>
+
+<div class="modal-body" ng-if="action_switch == 'finish'">
+  Vous allez valider le recueil de demande d'asile et générer les demandes d'asiles correspondantes.
+  <br />
+  <strong>Une fois cette validation faite, vous ne pourrez plus modifier ce recueil.</strong>
+</div>
+
+<div class="modal-body" ng-if="action_switch == 'eurodac'">
+  Vous allez générer un numéro EURODAC pour les demandeurs d'asile du recueil.
+  <br />
+  <strong>Une fois la génération faite, vous pourrez choisir les usagers existants.</strong>
+</div>
+
+<div class="modal-footer">
+  <a class="btn btn-primary button-confirm" ng-click="ok()">Valider</a>
+  <a class="btn btn-default button-cancel" ng-click="cancel()">Annuler</a>
+</div>

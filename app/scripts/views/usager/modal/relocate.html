@@ -1,0 +1,52 @@
+<div class="modal-body">
+  <div ng-show="etat == 'form'">
+    <h3>Information sur la nouvelle préfecture</h3>
+    <hr align="left" />
+
+    <div class="alert alert-danger" ng-show="_errors.usager">
+      {{_errors.usager}}
+    </div>
+
+    <select-referential-directive
+      label="'Préfecture affectée *'"
+      model="prefecture_rattachee.id"
+      icon="'university'"
+      error_model="_errors.prefecture_rattachee"
+      url="sites_url"
+      placeholder="">
+    </select-referential-directive>
+
+    <div class="thumbnail col-sm-12" ng-show="site.libelle">
+      <div>
+        <strong>{{site.libelle}}</strong>
+      </div>
+      <div ng-if="site.telephone">
+        <i class="fa fa-lg fa-phone"></i>&nbsp;&nbsp;{{site.telephone}}
+      </div>
+      <div ng-if="site.email">
+        <i class="fa fa-lg fa-at"></i>&nbsp;&nbsp;{{site.email}}
+      </div>
+      <div ng-if="site.adresse.voie">
+        <i class="fa fa-lg fa-envelope-o"></i>&nbsp;&nbsp;{{site.adresse.numero_voie}} {{site.adresse.voie}}, {{site.adresse.ville}} {{site.adresse.code_postal}}
+      </div>
+    </div>
+  </div>
+
+  <div ng-show="etat == 'confirm'">
+    <p>La fiche de l'usager et la demande d'asile associée vont être transférées à la préfecture sélectionnée. Les données ne seront pas visibles depuis ce compte utilisateur.</p>
+    <p>Valider le tranfert?</p>
+  </div>
+
+  <div ng-show="etat == 'success'">
+    <p>L'usager a bien été transféré. Vous allez être redirigé vers la liste des usagers.</p>
+
+    <p><strong>Important : Dans le cas d'un usager demandeur (possédant un N° AGDREF), n'oubliez pas d'effectuer également le transfert du dossier dans AGDREF.</strong></p>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <a class="btn btn-primary button-confirm" ng-click="ok()" ng-show="etat == 'form'">Valider</a>
+  <a class="btn btn-primary button-confirm" ng-click="confirm()" ng-show="etat == 'confirm'">Valider</a>
+  <a class="btn btn-primary button-confirm" ng-click="success()" ng-show="etat == 'success'">Valider</a>
+  <a class="btn btn-default button-cancel" ng-click="cancel()" ng-show="etat != 'success'">Annuler</a>
+</div>

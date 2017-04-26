@@ -1,0 +1,127 @@
+<div class="actionbar container affix">
+  <div class="row">
+    <div class="col-md-2">
+      <navigationbar-directive></navigationbar-directive>
+    </div>
+    <div class="col-md-10">
+    </div>
+  </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+<div class="col-sm-2"></div>
+<div class="col-sm-8 thumbnail">
+
+  <h3>Recherche par N° étranger</h3>
+  <simple-text-input-directive
+    form_label="'N° étranger'"
+    form_icon="'user'"
+    form_ng_model="identifiant_agdref"
+    form_placeholder="''"
+    form_origin="identifiant_agdref"
+    form_popover="'ex: 7503001687'">
+  </simple-text-input-directive>
+
+  <h3>OU</h3>
+  <h3>Recherche par état civil</h3>
+  <simple-text-input-directive
+    form_label="'Nom *'"
+    upper_first_letter="true"
+    form_icon="'user'"
+    form_ng_model="nom"
+    form_placeholder="''"
+    form_origin="nom"
+    form_popover="'ex: Dupond'">
+  </simple-text-input-directive>
+
+  <list-text-input-directive
+    label="'Prénom(s) *'"
+    upper_first_letter="true"
+    model="prenoms"
+    icon="'user'"
+    placeholder="''"
+    origin_model="prenoms"
+    popover_content="'ex: Jean'">
+  </list-text-input-directive>
+
+  <label class="label-control">Sexe *</label>
+  <span toggle-switch-directive
+    ng-model="sexe"
+    left-label="M"
+    knob-label=""
+    right-label="F"
+    switch-size="small"
+    left-label-color="royalblue"
+    right-label-color="red"
+    left-value="'M'"
+    right-value="'F'">
+  </span>
+
+  <date-text-input-directive
+    label="'Date de naissance *'"
+    active="true"
+    model="date_naissance"
+    origin_model="date_naissance"
+    popover_content="'ex: 15/01/1980'">
+  </date-text-input-directive>
+</div>
+<div class="col-sm-2"></div>
+
+
+<div class="col-sm-12"></div>
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
+
+  <h3 style="margin: 5px;">Identités approchantes</h3>
+  <div class="col-sm-12" ng-repeat="usager in pf_usagers" style="margin-bottom: 5px;">
+    <br />
+    <div class="thumbnail col-sm-12" style="background-color: #fafafa;">
+      <h4><strong>Identité connue du portail</strong></h4>
+
+      <div class="col-sm-12">
+        <strong class="col-sm-4 specific-margin">Photo</strong>
+        <div class="col-sm-8 thumbnail disabled specific-margin"><img width="100" ng-show="usager.photo" ng-src="{{api_url}}{{usager.photo._links.data}}" /><span ng-show="!usager.photo">-</span></div>
+
+        <strong class="col-sm-4 specific-margin">Numéro étranger</strong>
+        <div class="col-sm-8 thumbnail disabled specific-margin">{{usager.identifiant_agdref || '-'}}</div>
+
+        <strong class="col-sm-4 specific-margin">Identifiant portail</strong>
+        <div class="col-sm-8 thumbnail disabled specific-margin">{{usager.id || '-'}}</div>
+
+        <strong class="col-sm-4 specific-margin">Nom</strong>
+        <div class="col-sm-8 thumbnail disabled specific-margin">{{usager.nom}}</div>
+
+        <strong class="col-sm-4 specific-margin">Sexe</strong>
+        <div class="col-sm-8 thumbnail disabled specific-margin">{{usager.sexe}}</div>
+
+        <strong class="col-sm-4 specific-margin">Prénom(s)</strong>
+        <div class="col-sm-8 thumbnail disabled specific-margin"><span ng-repeat="prenom in usager.prenoms">{{prenom}} </span></div>
+
+        <strong class="col-sm-4 specific-margin">Date de naissance</strong>
+        <div class="col-sm-8 thumbnail disabled specific-margin">{{usager.date_naissance | date: 'dd/MM/yyyy'}}</div>
+
+        <strong class="col-sm-4 specific-margin">Nationalité</strong>
+        <div class="col-sm-8 thumbnail disabled specific-margin">{{usager.nationalites[0].libelle || '-'}}</div>
+
+        <strong class="col-sm-4 specific-margin">Préfecture de rattachement</strong>
+        <div class="col-sm-8 thumbnail disabled specific-margin">{{usager.prefecture_rattachee_label}}</div>
+      </div>
+
+    <div class="col-sm-12" ng-if="user.site_rattache.id != usager.prefecture_rattachee.id && usager.transferable">
+      <sc-button class="btn btn-primary"
+                 ng-click="transfert(usager)"
+                 wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                 cancel-wait-for="saveDone"
+                 label="'Transférer cet usager dans ma préfecture'">
+      </sc-button>
+    </div>
+    <div class="thumbnail col-sm-12" style="background-color: #faaaaa;" ng-if="!usager.transferable">
+      <strong>Cet usager n'est pas transférable.</strong>
+    </div>
+    <div class="thumbnail col-sm-12" style="background-color: #faaaaa;"
+         ng-if="user.site_rattache.id == usager.prefecture_rattachee.id && usager.transferable">
+      <strong>Cet usager est déjà rattaché à votre préfecture : Impossible de le rapatrier dans votre préfecture</strong>
+    </div>
+  </div>
+</div>
+<div class="col-sm-2"></div>

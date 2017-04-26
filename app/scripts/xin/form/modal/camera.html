@@ -1,0 +1,58 @@
+<div ng-show="!cameraActiv" class="modal-body" style="text-align: center;">
+  <div ng-show="!restrictFirefox && !cameraError">
+    <a class="btn btn-primary" href="" ng-click="cameraActiv = true"
+       style="margin-bottom: 3px;">
+      Prendre une photo par webcam
+    </a>
+    <br>
+  </div>
+
+  <div ng-show="restrictFirefox">
+    <a class="btn btn-primary" href="" ng-disabled="restrictFirefox"
+       style="margin-bottom: 3px;">
+      La webcam est désactivée sur les versions de firefox &lt; 24.0
+    </a>
+    <br>
+  </div>
+
+  <div ng-show="cameraError">
+    <a class="btn btn-primary" href="" ng-disabled="true"
+       style="margin-bottom: 3px;">
+      {{cameraError}}
+    </a>
+    <br>
+  </div>
+
+  <div ng-show="downloadIfNotCamera && (cameraError || restrictFirefox)">
+    <a class="btn btn-primary" href="" ng-click="showUploader()"
+       style="margin-bottom: 3px;">
+      Télécharger une photo
+    </a>
+    <br>
+  </div>
+
+  <div ng-show="errorMessageIfNotCamera && (!downloadIfNotCamera && cameraError)">
+    <a class="btn btn-primary" href="" ng-disabled="true"
+       style="margin-bottom: 3px;">
+      {{errorMessageIfNotCamera}}
+    </a>
+    <br>
+  </div>
+
+  <div>
+    <a class="btn btn-danger" ng-click="cancel()">Annuler</a>
+  </div>
+</div>
+
+<div ng-show="cameraActiv">
+  <div class="modal-body">
+    <camera-directive video="photoToModify"
+                      on-error="onCameraError">
+    </camera-directive>
+  </div>
+
+  <div class="modal-footer">
+    <a class="btn btn-primary button-confirm" ng-click="snap()" ng-show="!cameraError">Prendre la photo</a>
+    <a class="btn btn-default button-cancel" ng-click="cancel()">Annuler</a>
+  </div>
+</div>

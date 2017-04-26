@@ -1,0 +1,110 @@
+<div class="actionbar container affix">
+  <div class="row">
+    <div class="col-md-2">
+      <navigationbar-directive></navigationbar-directive>
+    </div>
+    <div class="col-md-10">
+      <div class="buttonbar">
+        <sc-button class="btn btn-primary pull-right"
+                   ng-disabled="!allowChart"
+                   ng-click="load()"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="chartDone"
+                   label="'Générer le graphique'"></sc-button>
+        <sc-button class="btn btn-success pull-right"
+                   ng-disabled="!allowExport"
+                   ng-click="createCSV()"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="csvDone"
+                   label="'Générer le CSV'"></sc-button>
+      </div>
+    </div>
+  </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+
+<div class="content container">
+  <div class="row">
+    <div class="col-md-2 left-content">
+    </div>
+
+    <div class="col-md-10 right-content">
+      <div class="container">
+        <div>
+          <h3 ng-if="type == 'chargeSPA'">Nombre de recueils enregistrés depuis les Structures de Premier Accueil</h3>
+          <h3 ng-if="type == 'chargeGU'">Nombre de rendez-vous réalisés en GU</h3>
+          <h3 ng-if="type == 'transfertsIn'">Flux de transferts depuis une autre préfecture</h3>
+          <h3 ng-if="type == 'transfertsOut'">Flux de transferts vers une autre préfecture</h3>
+          <h3 ng-if="type == 'prestaSPA'">Nombre d’erreurs de saisies des SPA</h3>
+        </div>
+        <br>
+
+        <div>
+          <h5 class="text-center col-xs-1">Du</h5>
+          <date-text-input-directive class="col-xs-5"
+            active="true"
+            model="begin"
+            error="errorBegin">
+          </date-text-input-directive>
+          <h5 class="text-center col-xs-1">au</h5>
+          <date-text-input-directive class="col-xs-5"
+            active="true"
+            model="end"
+            error="errorEnd">
+          </date-text-input-directive>
+          <select-referential-directive label="'Structures de Premier Accueil appartenant à l\'ensemble zonal'"
+                                        icon="'tag'"
+                                        model="spa"
+                                        url="spaUrl"
+                                        placeholder="'Sélectionner une Structure de Premier Accueil'"
+                                        ng-show="type == 'chargeSPA'">
+          </select-referential-directive>
+          <select-referential-directive label="'Structures de Premier Accueil appartenant à l\'ensemble zonal *'"
+                                        icon="'tag'"
+                                        model="spa"
+                                        url="spaUrl"
+                                        placeholder="'Sélectionner une Structure de Premier Accueil'"
+                                        ng-show="type == 'prestaSPA'">
+          </select-referential-directive>
+          <select-referential-directive label="'Guichets uniques appartenant à l\'ensemble zonal'"
+                                        icon="'tag'"
+                                        model="gu"
+                                        url="guUrl"
+                                        placeholder="'Sélectionner un guichet unique'"
+                                        ng-show="type == 'chargeGU'">
+          </select-referential-directive>
+          <div ng-show="type == 'transferts'">
+            <select-referential-directive class="col-xs-6"
+                                          label="'Préfectures de départ appartenant à l\'ensemble zonal'"
+                                          icon="'tag'"
+                                          model="prefFrom"
+                                          url="prefUrl"
+                                          placeholder="'Sélectionner une préfecture'">
+            </select-referential-directive>
+            <select-referential-directive class="col-xs-6"
+                                          label="'Préfectures d\'arrivée appartenant à l\'ensemble zonal'"
+                                          icon="'tag'"
+                                          model="prefTo"
+                                          url="prefUrl"
+                                          placeholder="'Sélectionner une préfecture'">
+            </select-referential-directive>
+          </div>
+        </div>
+
+        <div style="text-align: center;" ng-show="chartSpinner">
+          <h3>Récupération des données en cours...</h3>
+          <span class="fa fa-spinner fa-5x fa-pulse"></span>
+        </div>
+        <div style="text-align: center;" ng-show="csvSpinner">
+          <h3>Génération du fichier CSV en cours...</h3>
+          <span class="fa fa-spinner fa-5x fa-pulse"></span>
+        </div>
+
+        <canvas class="chart chart-bar" chart-data="data" chart-labels="labels"
+                chart-legend="{{series != undefined}}" chart-series="series">
+        </canvas>
+      </div>
+    </div>
+  </div>
+</div>

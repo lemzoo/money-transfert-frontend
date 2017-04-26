@@ -1,0 +1,55 @@
+<div class="modal-body">
+  <h2 align="center">Modification du mot de passe</h2>
+  <hr />
+  <p align="justify" ng-if="expired">
+    <i class="fa fa-exclamation-triangle"></i>
+    La période de validité de votre mot de passe est arrivé à expiration. Merci de renseigner un nouveau mot de passe.
+  </p>
+  <p align="justify" ng-if="expired">
+    <i class="fa fa-info-circle"></i>
+    Le nouveau mot de passe ne doit pas être le même que votre précédent mot de passe.
+  </p>
+  <p align="justify">
+    <i class="fa fa-info-circle"></i>
+    Le mot de passe doit faire au moins 8 caractères avec au moins une majuscule,
+    une minuscule, un chiffre et un caractère spécial.
+  </p>
+
+  <form class="simple-form" novalidate name="basicLoginForm">
+    <div class="form-group alert alert-danger" ng-show="_errors.general">
+      {{_errors.general}}
+    </div>
+
+    <simple-text-input-directive ng-show="expired"
+                                 type="'password'"
+                                 form-label="'Mot de passe actuel *'"
+                                 form-icon="'lock'"
+                                 form-ng-model="old_password"
+                                 form-origin="old_password">
+    </simple-text-input-directive>
+
+    <simple-text-input-directive type="'password'"
+                                 form-label="'Nouveau mot de passe *'"
+                                 form-icon="'lock'"
+                                 form-ng-model="password"
+                                 form-origin="password">
+    </simple-text-input-directive>
+
+    <simple-text-input-directive type="'password'"
+                                 form-label="'Confirmez le nouveau mot de passe *'"
+                                 form-icon="'lock'"
+                                 form-ng-model="confirm_password"
+                                 form-origin="confirm_password"
+                                 form-error="_errors.confirm_password">
+    </simple-text-input-directive>
+
+    <div class="form-group" ng-show="etat == 'success'">
+      Mot de passe changé avec succès.
+    </div>
+
+    <div class="form-group" align="center">
+      <a class="btn btn-primary button-confirm" ng-click="updatePWD()" ng-show="etat == 'form'">Valider</a>
+      <a class="btn btn-primary button-confirm" ng-click="cancel()" ng-show="etat == 'success'">Fermer</a>
+    </div>
+  </form>
+</div>

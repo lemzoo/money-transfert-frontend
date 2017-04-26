@@ -1,0 +1,111 @@
+<div class="actionbar container affix">
+    <div class="row">
+        <div class="col-md-2">
+            <navigationbar-directive></navigationbar-directive>
+        </div>
+        <div class="col-md-10">
+            <div class="buttonbar" ng-init="haveFilters = false">
+              <a class="btn btn-primary pull-right" ng-show="!avancedFilters" ng-click="avancedFilters = true">
+                <i class="glyphicon glyphicon-filter" ng-show="haveFilters"></i><strong>Afficher la recherche avancée</strong>
+              </a>
+              <a class="btn btn-primary pull-right" ng-show="avancedFilters" ng-click="avancedFilters = false"><strong>Cacher la recherche avancée</strong></a>
+            </div>
+        </div>
+    </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+
+<div class="content container">
+  <div class="row" ng-show="!site_affecte.id && !site_affecte.sans_limite">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8 alert alert-danger">Vous ne possédez pas de site associé, merci de contacter votre administrateur.</div>
+    <div class="col-sm-2"></div>
+  </div>
+  <div class="row" ng-show="site_affecte.id || site_affecte.sans_limite">
+
+    <div class="col-md-2 left-content"></div>
+
+    <div class="col-md-10 right-content">
+      <div class="container">
+        <div solr-filters-directive lookup="lookup" json="usager" avanced-filters="avancedFilters" have-filters="haveFilters"></div>
+
+        <div class="pull-right space-bottom">
+          <span toggle-switch-directive ng-if="toggle.show"
+            ng-model="toggle.overall"
+            left-label="{{toggle.left_label}}"
+            knob-label="Vue"
+            right-label="{{toggle.right_label}}"
+            switch-size="small"
+            left-label-color="#337ab7"
+            right-label-color="#4cae4c">
+          </span>
+        </div>
+
+        <list-resource-directive resource-backend="resourceBackend" complement="toggle.overall"
+                                 lookup="lookup" links="links">
+          <div class="well-list" ng-mouseover="showPopover(resource.id)">
+            <div class="col-xs-2">
+              <a href="#/usagers/{{resource.id}}{{complement ? '?overall' : ''}}">
+                <i class="fa fa-4x fa-user"></i>
+              </a>
+            </div>
+            <div class="col-xs-10">
+              <div class="col-sm-12">
+                <strong>
+                  <a href="#/usagers/{{resource.id}}{{complement ? '?overall' : ''}}">
+                    Usager n°{{resource.id}}
+                  </a>
+                </strong>
+              </div>
+              <div class="col-sm-12">
+                <strong>
+                  {{displayListText(resource.prenoms)}}{{resource.nom}}
+                </strong>
+              </div>
+              <div class="col-sm-12" ng-show="resource.identifiant_agdref">
+                N° étranger : <strong>{{resource.identifiant_agdref}}</strong>
+              </div>
+              <div class="col-sm-12">
+                Sexe : <strong ng-show="resource.sexe=='M'">Masculin</strong><strong ng-show="resource.sexe=='F'">Féminin</strong>
+              </div>
+              <div class="col-sm-12">
+                Né<span ng-show="resource.sexe=='F'">e</span> le : <strong>{{resource.date_naissance | xinDate: 'shortDate' : '+0000'}}</strong>
+              </div>
+            </div>
+          </div>
+          <div class="popover-list" ng-show="popoverIsVisible[resource.id]" ng-mouseleave="hidePopover(resource.id)">
+            <div class="col-xs-2">
+              <a href="#/usagers/{{resource.id}}{{complement ? '?overall' : ''}}">
+                <i class="fa fa-4x fa-user"></i>
+              </a>
+            </div>
+            <div class="col-xs-10">
+              <div class="col-sm-12">
+                <strong>
+                  <a href="#/usagers/{{resource.id}}{{complement ? '?overall' : ''}}">
+                    Usager n°{{resource.id}}
+                  </a>
+                </strong>
+              </div>
+              <div class="col-sm-12">
+                <strong>
+                  {{displayListText(resource.prenoms)}}{{resource.nom}}
+                </strong>
+              </div>
+              <div class="col-sm-12" ng-show="resource.identifiant_agdref">
+                N° étranger : <strong>{{resource.identifiant_agdref}}</strong>
+              </div>
+              <div class="col-sm-12">
+                Sexe : <strong ng-show="resource.sexe=='M'">Masculin</strong><strong ng-show="resource.sexe=='F'">Féminin</strong>
+              </div>
+              <div class="col-sm-12">
+                Né<span ng-show="resource.sexe=='F'">e</span> le : <strong>{{resource.date_naissance | xinDate: 'shortDate' : '+0000'}}</strong>
+              </div>
+            </div>
+          </div>
+        </list-resource-directive>
+      </div>
+    </div>
+  </div>
+</div>

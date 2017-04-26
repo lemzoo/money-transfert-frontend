@@ -1,0 +1,88 @@
+<div class="actionbar container affix">
+    <div class="row">
+        <div class="col-md-2">
+            <navigationbar-directive></navigationbar-directive>
+        </div>
+        <div class="col-md-10">
+            <div class="buttonbar" ng-init="haveFilters = false">
+                <a class="btn btn-danger" href="#/sites/nouveau-site" ng-if="links.create"><strong>Nouveau site</strong></a>
+                <a class="btn btn-primary pull-right" ng-show="!avancedFilters" ng-click="avancedFilters = true">
+                  <i class="glyphicon glyphicon-filter" ng-show="haveFilters"></i><strong>Afficher la recherche avancée</strong>
+                </a>
+                <a class="btn btn-primary pull-right" ng-show="avancedFilters" ng-click="avancedFilters = false"><strong>Cacher la recherche avancée</strong></a>
+            </div>
+        </div>
+    </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+<div class="content container">
+  <div class="row">
+    <div class="col-md-2 left-content">
+    </div>
+    <div class="col-md-10 right-content">
+
+      <div class="container">
+
+        <div solr-filters-directive lookup="lookup" json="site" avanced-filters="avancedFilters" have-filters="haveFilters"></div>
+
+        <list-resource-directive resource-backend="resourceBackend" lookup="lookup" links="links" custom-update-resources-list="computeResource">
+          <div class="well-list" ng-mouseover="showPopover(resource.id)">
+            <div class="col-xs-2">
+              <a href="#/sites/{{resource.id}}">
+                <i class="fa fa-4x fa-university"></i>
+              </a>
+            </div>
+            <div class="col-xs-10">
+              <div class="col-sm-12">
+                <a ng-href='#/sites/{{resource.id}}'>
+                  <strong>{{resource.libelle}}</strong>
+                </a>
+              </div>
+              <div class="col-sm-12" ng-show="resource.date_fermeture">
+                <div ng-show="resource.soon_inactive" class="badge alert-warning">Cet site sera désactivé le {{resource.date_fermeture | xinDate: 'shortDate' : '+0000'}}</div>
+                <div ng-show="resource.already_inactive" class="badge alert-danger">Cet site a été désactivé le {{resource.date_fermeture | xinDate: 'shortDate' : '+0000'}}</div>
+              </div>
+              <div class="col-sm-12">
+                <strong>{{settingsSites[resource.type]}}</strong>
+              </div>
+              <div class="col-sm-12">
+                <i class="fa fa-lg fa-envelope"></i>&nbsp;&nbsp;{{resource.adresse.numero_voie}} {{resource.adresse.voie}}, {{resource.adresse.code_postal}} {{resource.adresse.ville}}
+              </div>
+              <div class="col-sm-12" ng-show="resource.telephone">
+                <i class="fa fa-lg fa-phone"></i>&nbsp;&nbsp;{{resource.telephone}}
+              </div>
+            </div>
+          </div>
+          <div class="popover-list" ng-show="popoverIsVisible[resource.id]" ng-mouseleave="hidePopover(resource.id)">
+            <div class="col-xs-2">
+              <a href="#/sites/{{resource.id}}">
+                <i class="fa fa-4x fa-university"></i>
+              </a>
+            </div>
+            <div class="col-xs-10">
+              <div class="col-sm-12">
+                <a ng-href='#/sites/{{resource.id}}'>
+                  <strong>{{resource.libelle}}</strong>
+                </a>
+              </div>
+              <div class="col-sm-12" ng-show="resource.date_fermeture">
+                <div ng-show="resource.soon_inactive" class="badge alert-warning">Cet site sera désactivé le {{resource.date_fermeture | xinDate: 'shortDate' : '+0000'}}</div>
+                <div ng-show="resource.already_inactive" class="badge alert-danger">Cet site a été désactivé le {{resource.date_fermeture | xinDate: 'shortDate' : '+0000'}}</div>
+              </div>
+              <div class="col-sm-12">
+                <strong>{{settingsSites[resource.type]}}</strong>
+              </div>
+              <div class="col-sm-12">
+                <i class="fa fa-lg fa-envelope"></i>&nbsp;&nbsp;{{resource.adresse.numero_voie}} {{resource.adresse.voie}}, {{resource.adresse.code_postal}} {{resource.adresse.ville}}
+              </div>
+              <div class="col-sm-12" ng-show="resource.telephone">
+                <i class="fa fa-lg fa-phone"></i>&nbsp;&nbsp;{{resource.telephone}}
+              </div>
+            </div>
+          </div>
+        </list-resource-directive>
+      </div>
+    </div>
+  </div>
+</div>

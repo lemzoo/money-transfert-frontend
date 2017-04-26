@@ -1,0 +1,57 @@
+<div class="actionbar container navbar-static-top affix">
+  <div class="row">
+    <div class="col-md-2">
+      <navigationbar-directive></navigationbar-directive>
+    </div>
+    <div class="col-md-10">
+      <div class="buttonbar">
+        <a class="btn btn-danger" href="#/webhooks/nouveau-webhook" ng-if="links.create"><strong>Nouveau webhook</strong></a>
+      </div>
+    </div>
+  </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+<div class="content container">
+  <div class="row">
+    <div class="col-md-2 left-content">
+    </div>
+    <div class="col-md-10 right-content">
+
+      <div class="container-fluid">
+
+        <div solr-filters-directive lookup="lookup" json="demande_asile" avanced-filters="avancedFilters" have-filters="haveFilters"></div>
+
+        <list-resource-directive resource-backend="resourceBackend" lookup="lookup" links="links">
+          <div class="well-list row">
+            <div class="col-xs-2">
+              <a href="#/orchestration-echanges/{{resource.id}}">
+                <i ng-show="resource.status=='RUNNING'" class="fa fa-4x fa-play" style="color: green;"></i>
+                <i ng-show="resource.status=='PAUSED'" class="fa fa-4x fa-pause" style="color:orange;"></i>
+                <i ng-show="resource.status=='STOPPING'" class="fa fa-4x fa-spinner" style="color: black;"></i>
+                <i ng-show="resource.status=='STOPPED'" class="fa fa-4x fa-stop" style="color: red;"></i>
+                <i ng-show="resource.status=='FAILURE'" class="fa fa-4x fa-remove" style="color: red;"></i>
+              </a>
+            </div>
+            <div class="col-xs-10">
+              <div class="col-sm-12">
+                <strong>
+                  <a ng-href='#/orchestration-echanges/{{resource.id}}?ready&failure'>{{resource.queue}}</a>
+                </strong>
+              </div>
+              <div class="col-sm-12">
+                <strong>
+                  <span ng-show="resource.status=='RUNNING'">En cours d'exécution</span>
+                  <span ng-show="resource.status=='PAUSED'">En pause</span>
+                  <span ng-show="resource.status=='STOPPING'">En cours d'arrêt</span>
+                  <span ng-show="resource.status=='STOPPED'">Arrêtée</span>
+                  <span ng-show="resource.status=='FAILURE'">Une erreur est survenue</span>
+                </strong>
+              </div>
+            </div>
+          </div>
+        </list-resource-directive>
+      </div>
+    </div>
+  </div>
+</div>

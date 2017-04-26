@@ -1,0 +1,298 @@
+[
+  {
+    "type": "text",
+    "label": "Numéro Eurodac",
+    "field": "identifiants_eurodac",
+    "icon": "key"
+  },
+  {
+    "type": "text",
+    "label": "Numéro étranger",
+    "field": "identifiant_agdref",
+    "icon": "user"
+  },
+  {
+    "type": "date",
+    "label": "Date d'enregistrement AGDREF",
+    "field": "date_enregistrement_agdref"
+  },
+  {
+    "type": "text",
+    "label": "Identifiant DNA",
+    "field": "identifiant_dna",
+    "icon": "user"
+  },
+  {
+    "type": "date",
+    "label": "Date DNA",
+    "field": "date_dna"
+  },
+  {
+    "type": "text",
+    "label": "Identifiant famille DNA",
+    "field": "identifiant_famille_dna",
+    "icon": "user"
+  },
+  {
+    "type": "boolean",
+    "label": "ECV valide",
+    "field": "ecv_valide",
+    "icon": "search"
+  },
+  {
+    "type": "text",
+    "label": "Identifiant de l'usager dans le portail",
+    "field": "id",
+    "icon": "user"
+  },
+  {
+    "type": "text",
+    "label": "Nom",
+    "field": "nom",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Nom d'usage",
+    "field": "nom_usage",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Prenom",
+    "field": "prenoms",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "identifier",
+    "label": "Sexe",
+    "field": "sexe",
+    "icon": "lock",
+    "choices": [
+      {
+        "id": "M",
+        "libelle": "Homme"
+      },
+      {
+        "id": "F",
+        "libelle": "Femme"
+      }
+    ]
+  },
+  {
+    "type": "date",
+    "label": "Date de naissance",
+    "field": "date_naissance"
+  },
+  {
+    "type": "boolean",
+    "label": "Date de naissance approximative",
+    "field": "date_naissance_approximative",
+    "icon": "search"
+  },
+  {
+    "type": "date",
+    "label": "Date de décès",
+    "field": "date_deces"
+  },
+  {
+    "type": "identifier",
+    "label": "Pays de naissance",
+    "field": "pays_naissance",
+    "icon": "map-marker",
+    "url": "referentiels/pays"
+  },
+  {
+    "type": "address",
+    "label": "Ville de naissance",
+    "field": "ville_naissance",
+    "icon": "map-marker"
+  },
+  {
+    "type": "identifier",
+    "label": "Nationalité",
+    "field": "nationalites",
+    "icon": "flag",
+    "url": "referentiels/nationalites"
+  },
+  {
+    "type": "date",
+    "label": "Date de la naturalisation",
+    "field": "date_naturalisation"
+  },
+  {
+    "type": "date",
+    "label": "Date de fuite",
+    "field": "date_fuite"
+  },
+  {
+    "type": "text",
+    "label": "Nom du père",
+    "field": "nom_pere",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Prenom du père",
+    "field": "prenom_pere",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Nom de la mère",
+    "field": "nom_mere",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Prenom de la mère",
+    "field": "prenom_mere",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "boolean",
+    "label": "Enfant de réfugié",
+    "field": "enfant_de_refugie",
+    "icon": "search"
+  },
+  {
+    "type": "identifier",
+    "label": "Situation familiale",
+    "field": "situation_familiale",
+    "icon": "lock",
+    "choices": [
+      {
+        "id": "CELIBATAIRE",
+        "libelle": "Célibataire"
+      },
+      {
+        "id": "DIVORCE",
+        "libelle": "Divorcé(e)"
+      },
+      {
+        "id": "MARIE",
+        "libelle": "Marié(e)"
+      },
+      {
+        "id": "CONCUBIN",
+        "libelle": "Concubin(e)"
+      },
+      {
+        "id": "SEPARE",
+        "libelle": "Séparé(e)"
+      },
+      {
+        "id": "VEUF",
+        "libelle": "Veuf(ve)"
+      },
+      {
+        "id": "PACSE",
+        "libelle": "Pacsé(e)"
+      }
+    ]
+  },
+  {
+    "type": "text",
+    "label": "Téléphone",
+    "field": "telephone",
+    "icon": "phone"
+  },
+  {
+    "type": "text",
+    "label": "Email",
+    "field": "email",
+    "icon": "at"
+  },
+  {
+    "type": "identifier",
+    "label": "Langue(s)",
+    "field": "langues",
+    "icon": "language",
+    "url": "referentiels/langues_iso639_2"
+  },
+  {
+    "type": "identifier",
+    "label": "Langue d'audition à l'OFPRA",
+    "field": "langues_audition_OFPRA",
+    "icon": "language",
+    "url": "referentiels/langues_OFPRA"
+  },
+  {
+    "type": "text",
+    "label": "Numéro de passeport",
+    "field": "numero_passeport",
+    "icon": "file"
+  },
+  {
+    "type": "date",
+    "label": "Date d'expiration du passeport'",
+    "field": "date_expiration_passeport"
+  },
+  {
+    "type": "text",
+    "label": "Nom du représentant légal",
+    "field": "representant_legal_nom",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "text",
+    "label": "Prenom du représentant légal",
+    "field": "representant_legal_prenom",
+    "icon": "user",
+    "phonetisable":
+      {
+        "show": true,
+        "value": null
+      }
+  },
+  {
+    "type": "date",
+    "label": "Date de départ",
+    "field": "date_depart"
+  },
+  {
+    "type": "date",
+    "label": "Date d'entrée en France",
+    "field": "date_entree_en_france"
+  }
+]

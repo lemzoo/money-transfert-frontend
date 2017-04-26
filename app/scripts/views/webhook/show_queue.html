@@ -1,0 +1,226 @@
+<div class="actionbar container affix">
+  <div class="row">
+    <div class="col-md-2">
+      <navigationbar-directive></navigationbar-directive>
+    </div>
+    <div class="col-md-10">
+      <div class="buttonbar">
+        <button ng-show="queue.status=='RUNNING' || queue.status=='FAILURE'"
+                class="pause-queue btn btn-primary pull-right"
+                ng-click="pauseQueue()">Mettre en pause</button>
+        <div ng-show="queue.status=='STOPPED' || queue.status=='PAUSED'" class="pull-right btn-group">
+          <button class="pause-queue btn btn-primary dropdown-toggle"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Sélectionner tous les messages <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="javascript:void(0)" ng-click="selectAll('deletable')">qui peuvent être supprimés</a></li>
+            <li><a href="javascript:void(0)" ng-click="selectAll('cancellable')">qui peuvent être annulés</a></li>
+            <li><a href="javascript:void(0)" ng-click="selectAll('repeatable')">qui peuvent être rejoués</a></li>
+          </ul>
+        </div>
+        <button ng-show="queue.status=='PAUSED'" class="resume-queue btn btn-primary pull-right" ng-click="resumeQueue()">Redémarrer</button>
+        <span class="pull-right">
+          <label class="label-control">Rafraichissement</label>
+          <span toggle-switch-directive
+            ng-model="auto_refresh_messages"
+            switch-size="small"
+            left-label="Off"
+            right-label="On"
+            left-value="false"
+            right-value="true"
+            left-label-color="#a2a2a2"
+            right-label-color="royalblue">
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+<div class="content container">
+  <div class="row">
+    <div class="col-md-2 left-content">
+    </div>
+    <div class="col-md-10 right-content">
+      <div class="container">
+
+        <div class="buttonbar">
+          <sc-button ng-show="(queue.status=='STOPPED' || queue.status=='PAUSED') && showReplayAllButton"
+                   class="pause-queue btn btn-primary pull-right"
+                   ng-click="repeatAllMessages()"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="replayAllDone"
+                   label="'Rejouer tous les messages'">
+          </sc-button>
+          <sc-button ng-show="queue.status=='STOPPED' || queue.status=='PAUSED'"
+                   class="pause-queue btn btn-primary pull-right"
+                   ng-click="doOnSelectedMessages('repeat')"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="replayDone"
+                   label="'Rejouer les messages sélectionnés'">
+          </sc-button>
+          <sc-button ng-show="queue.status=='STOPPED' || queue.status=='PAUSED'"
+                   class="pause-queue btn btn-primary pull-right"
+                   ng-click="doOnSelectedMessages('delete')"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="deleteDone"
+                   label="'Supprimer les messages sélectionnés'">
+          </sc-button>
+          <sc-button ng-show="queue.status=='STOPPED' || queue.status=='PAUSED'"
+                   class="pause-queue btn btn-primary pull-right"
+                   ng-click="doOnSelectedMessages('cancel')"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="cancelDone"
+                   label="'Annuler les messages sélectionnés'">
+          </sc-button>
+        </div>
+
+        <form class="simple-form" novalidate name="webhookForm" ng-submit="saveWebhook()">
+
+          <div class="alert" role="alert" ng-show="info.show">
+            {{ info.message }}
+          </div>
+          <div class="alert alert-danger" ng-show="error">
+            {{ error.text }}
+          </div>
+
+          <div class="col-sm-12">
+            <div class="col-md-5" style="z-index:10;">
+              <h3>Queue</h3>
+              <hr align="left" />
+
+              <div class="form-group" style="z-index: 1;">
+                <label class="label-control" for="libelle">Nom de la queue</label>
+                <div class="input-group">
+                  <div class="input-group-addon">
+                    <i class="fa fa-lg fa-bookmark"></i>
+                  </div>
+                  <span class="form-control">{{queue.queue}}</span>
+                </div>
+              </div>
+              <div class="form-group" style="z-index: 10;">
+                <label for="event">Statut</label>
+                <div class="input-group">
+                  <div class="input-group-addon">
+                    &nbsp;&nbsp;<i class="fa fa-lg fa-bolt"></i>&nbsp;
+                  </div>
+                  <span class="form-control">{{queue.status}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-1"></div>
+
+            <div class="col-md-5">
+              <h3>Messages</h3>
+              <hr align="left" />
+
+              <div class="thumbnail">
+                <div class="form-group">
+                <label class="checkbox-inline">
+                  <input type="checkbox" ng-model="READY" ng-change="updateFilters()"> Ready
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" ng-model="FAILURE" ng-change="updateFilters()"> Failure
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" ng-model="CANCELLED" ng-change="updateFilters()"> Cancelled
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" ng-model="DELETED" ng-change="updateFilters()"> Deleted
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" ng-model="SKIPPED" ng-change="updateFilters()"> Skipped
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" ng-model="DONE" ng-change="updateFilters()"> Done
+                </label>
+                </div>
+                <date-text-input-directive
+                  label="'A partir de'"
+                  active="true"
+                  model="from"
+                  with-hour="true"
+                  origin_model="from"
+                  error=""
+                  approximative="false">
+                </date-text-input-directive>
+                <date-text-input-directive
+                  label="'Jusqu\'à'"
+                  active="true"
+                  with-hour="true"
+                  model="to"
+                  origin_model="to"
+                  error=""
+                  approximative="false">
+                </date-text-input-directive>
+                <div class="row">
+                  <div class="col-md-12">
+                    <label>Message ID:</label>
+                    <input type="search" class="form-control col-sm-6" ng-model="id_filter" placeholder="Rechercher un message par son Id" ng-disabled="uDisabled" />
+                  </div>
+                </div>
+                <br />
+              </div>
+              <div ng-show="messages.length != 0">
+                <div ng-repeat="msg in messages">
+                  <div class="alert" role="alert"
+                       ng-class="msg.status == 'SUCCESS' ? 'alert-success' : msg.status == 'FAILURE' ? 'alert-danger' : 'alert-info'">
+                    <h4 class="panel-title">
+                      <span ng-show="queue.status=='STOPPED' || queue.status=='PAUSED'">
+                        <input type="checkbox" ng-model="selected[msg.id]"
+                               ng-click="select(msg.id)" ng-show="msg._can_repeat || msg._can_delete || msg._can_cancel">
+                        <a href="" ng-click="cancelMessage(msg.id)" ng-show="msg._can_cancel">
+                          <i class="fa fa-lg fa-trash" style="color: red;"></i>
+                        </a>
+                        <a href="" ng-click="deleteMessage(msg.id)" ng-show="msg._can_delete">
+                          <i class="fa fa-lg fa-times" style="color: black;"></i>
+                        </a>
+                        <a href="" ng-click="askRepeatMessage(msg.id)" ng-show="msg._can_repeat">
+                          <i class="fa fa-lg fa-repeat" style="color: orange;"></i>
+                        </a>
+                        <a href="" ng-click="patchMessage(msg.id, msg._context)" ng-show="msg._can_patch">
+                          <i class="fa fa-lg fa-pencil" style="color: orange;"></i>
+                        </a>
+                      </span>
+                      <a data-toggle="collapse" data-target="#collapse-msg-{{$index}}"
+                         aria-expanded="false" aria-controls="collapse-msg-{{$index}}">
+                        <strong>{{msg.handler}} - {{msg.created | xinDate:'medium'}}</strong>
+                        <div ng-show="msg.next_run">Prochain essai: {{msg.next_run | xinDate:'medium'}}</div>
+                      </a>
+                      <a href="" ng-show="msg._invalid_context">
+                        <i class="fa fa-lg fa-warning" style="color: red;"></i>
+                      </a>
+                    </h4>
+                    <div class="collapse" id="collapse-msg-{{$index}}">
+                      <div><label>Id:</label>{{msg.id}}</div>
+                      <div><label>Création:</label>{{msg.created | xinDate:'medium'}}</div>
+                      <div ng-show="msg.processed">
+                        <label>Traitement:</label>{{msg.processed | xinDate:'medium'}}
+                      </div>
+                      <div ng-if="msg.status_comment">
+                        <label>Status</label>
+                        <div class="well" style="white-space: pre-wrap;">{{msg.status_comment}}</div>
+                      </div>
+                      <div ng-if="msg.json_context">
+                        <label>Context</label>
+                        <a href="" ng-show="msg._invalid_context">
+                          <i class="fa fa-lg fa-warning" style="color: red;">Document json invalide</i>
+                        </a>
+                        <div class="well" style="white-space: pre-wrap;">{{msg._context}}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div ng-if="messages.length == 0" class="text-center">
+                <h3><i>Pas de messages</i></h3>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

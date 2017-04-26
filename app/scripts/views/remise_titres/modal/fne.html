@@ -1,0 +1,162 @@
+<form ng-submit="search()">
+  <div class="modal-header">
+    <h3><strong>Recherche d'identité</strong></h3>
+    <span ng-show="no_fne" class="btn btn-disconnect btn-xs" style="color: white;">
+    FNE injoignable
+  </span>
+  </div>
+
+  <div class="modal-body">
+    <div class="well well-sm">
+      <simple-text-input-directive
+        form-label="'N° Étranger *'"
+        autofocus-enabled="true"
+        form-icon=""
+        form-ng-model="numero_etranger"
+        form-origin="numero_etranger"
+        form-error="error">
+      </simple-text-input-directive>
+    </div>
+
+  <div class="well well-sm" ng-show="portail_usager">
+    <h4><strong>Identité connue du système d'information</strong></h4>
+    <div class="row">
+      <strong class="col-sm-4">Numéro étranger</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{portail_usager.identifiant_agdref}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Nom</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{portail_usager.nom}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Prénom(s)</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{portail_usager.prenoms.join(" ")}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Sexe</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{portail_usager.sexe}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Date de naissance</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{portail_usager.date_naissance | xinDate : 'shortDate'}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Ville de naissance</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{portail_usager.ville_naissance}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Pays de naissance</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{portail_usager.pays_naissance.libelle}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Nationalité</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{portail_usager.nationalites[0].libelle}}</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="pull-right">
+          <button class="btn btn-success" ng-click="finish(portail_usager, 'portail')">
+            Choisir cet usager
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="well well-sm" ng-show="fne_usager">
+    <h4><strong>Identité connue du FNE</strong></h4>
+    <div class="row">
+      <strong class="col-sm-4">Numéro étranger</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{fne_usager.numero_agdref}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Nom</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{fne_usager.nom}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Prénom(s)</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{fne_usager.prenoms.join(" ")}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Sexe</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{fne_usager.sexe}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Date de naissance</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{fne_usager.date_naissance | xinDate: 'shortDate'}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Ville de naissance</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{fne_usager.ville_naissance}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Pays de naissance</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{fne_usager.pays_naissance.libelle}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <strong class="col-sm-4">Nationalité</strong>
+      <div class="col-sm-8">
+        <div class="thumbnail disabled margin-bottom-small">{{fne_usager.nationalites[0].libelle}}</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="pull-right">
+          <button class="btn btn-success" ng-click="finish(fne_usager, 'fne')"
+                  ng-disabled="portail_usager">
+            Choisir cet usager
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="alert alert-danger" ng-show="no_result">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      Aucune correspondance n'a été trouvée dans le système d'information ni dans le FNE.
+      Veuillez vérifier votre saisie et effectuer une nouvelle recherche.
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <sc-button class="btn btn-primary"
+               ng-click="search()"
+               wait-for-class="fa fa-spinner fa-1 fa-pulse"
+               cancel-wait-for="searchDone"
+               label="'Rechercher'">
+    </sc-button>
+    <button class="btn btn-default" ng-click="cancel()">Annuler</button>
+  </div>
+</form>

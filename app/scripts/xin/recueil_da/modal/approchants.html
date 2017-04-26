@@ -1,0 +1,168 @@
+<style>
+  .background-blue {
+    background-color: #d0e0f5;
+  }
+</style>
+
+<div ng-init="initModal()"></div>
+
+<div class="modal-header">
+  <div style="text-align: center;">
+    <h2 style="margin: 5px;">Recherche d'identité</h2>
+  </div>
+  <span ng-show="no_fne" class="btn btn-disconnect btn-xs" style="color: white;">FNE injoignable</span>
+  <button class="btn btn-disconnect btn-xs" style="color: white;"
+          ng-show="fne_cr206"
+          popover-title="Le résultat FNE contient plus de 99 réponses"
+          popover="Merci d'affiner la recherche en saisissant une date de naissance."
+          popover-placement="bottom"
+          popover-trigger="mouseenter">
+    FNE: Trop de résultats
+  </button>
+</div>
+
+<div>
+  <div ng-if="usager.demandeur">
+    <div class="well well-sm col-sm-12 background-blue">
+      <h4>N° Eurodac</h4>
+      <list-text-input-directive model="usager_search.identifiant_eurodac"
+                                 icon-text="FR"
+                                 origin-model="usager_search.identifiant_eurodac">
+      </list-text-input-directive>
+    </div>
+
+    <div class="text-center"
+         ng-show="searched && !pf_usagers_eurodac.length && !fne_usagers_eurodac.length">
+      <h3><i>Pas de résultats</i></h3>
+    </div>
+    <div class="col-sm-12" ng-repeat="usager in pf_usagers_eurodac" style="margin-bottom: 5px;">
+      <approchant-portail-directive usager="usager"
+                                    select-approchant="selectApprochant"
+                                    select-approchant-without-e-c="selectApprochantWithoutEC"
+                                    usager-orig="usager_orig">
+      </approchant-portail-directive>
+    </div>
+    <div class="col-sm-12" ng-repeat="usager in fne_usagers_eurodac" style="margin-bottom: 5px;">
+      <approchant-fne-directive usager="usager"
+                                select-approchant="selectApprochant"
+                                select-approchant-without-e-c="selectApprochantWithoutEC"
+                                usager-orig="usager_orig">
+      </approchant-fne-directive>
+    </div>
+
+    <div class="well well-sm col-sm-12 background-blue">
+      <h4>N° Étranger</h4>
+      <simple-text-input-directive form-ng-model="usager_search.identifiant_agdref"
+                                   form-icon="'user'"
+                                   form-origin="usager_search.identifiant_agdref"
+                                   form-error="usager_search._errors.identifiant_agdref">
+      </simple-text-input-directive>
+    </div>
+
+    <div class="text-center"
+         ng-show="searched && !pf_usagers_agdref.length && !fne_usagers_agdref.length">
+      <h3><i>Pas de résultats</i></h3>
+    </div>
+    <div class="col-sm-12" ng-repeat="usager in pf_usagers_agdref" style="margin-bottom: 5px;">
+      <approchant-portail-directive usager="usager"
+                                    select-approchant="selectApprochant"
+                                    select-approchant-without-e-c="selectApprochantWithoutEC"
+                                    usager-orig="usager_orig">
+      </approchant-portail-directive>
+    </div>
+    <div class="col-sm-12" ng-repeat="usager in fne_usagers_agdref" style="margin-bottom: 5px;">
+      <approchant-fne-directive usager="usager"
+                                select-approchant="selectApprochant"
+                                select-approchant-without-e-c="selectApprochantWithoutEC"
+                                usager-orig="usager_orig">
+      </approchant-fne-directive>
+    </div>
+  </div>
+
+  <div class="well well-sm col-sm-12 background-blue">
+    <h4>État civil</h4>
+    <simple-text-input-directive form-label="'Nom *'"
+                                 upper-first-letter="true"
+                                 form-ng-model="usager_search.nom"
+                                 form-origin="usager_search.nom"
+                                 form-icon="'user'"
+                                 form-error="usager_search._errors.nom"
+                                 form-popover="'ex: Dupond'">
+    </simple-text-input-directive>
+
+    <list-text-input-directive label="'Prénom(s) *'"
+                               upper-first-letter="true"
+                               model="usager_search.prenoms"
+                               form-origin="usager_search.prenoms"
+                               icon="'user'"
+                               error="usager_search._errors.prenoms"
+                               popover-content="'ex: Jean'">
+    </list-text-input-directive>
+
+    <label class="label-control">Sexe *</label>
+    <div class="input-group">
+      <span toggle-switch-directive
+        ng-model="usager_search.sexe"
+        left-label="M"
+        knob-label=""
+        right-label="F"
+        switch-size="small"
+        left-label-color="royalblue"
+        right-label-color="red"
+        left-value="'M'"
+        right-value="'F'">
+      </span>
+    </div>
+    <div ng-show="usager_search._errors.sexe" class="alert alert-danger">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      {{usager_search._errors.sexe}}
+    </div>
+    <br>
+
+    <date-text-input-directive
+      label="'Date de naissance *'"
+      model="usager_search.date_naissance"
+      origin-model="usager_search.date_naissance"
+      active="true"
+      error="usager_search._errors.date_naissance"
+      popover-content="'ex: 15/01/1980'">
+    </date-text-input-directive>
+  </div>
+
+  <div class="text-center" ng-show="searched && !pf_usagers_ec.length && !fne_usagers_ec.length">
+    <h3><i>Pas de résultats</i></h3>
+  </div>
+  <div class="col-sm-12" ng-repeat="usager in pf_usagers_ec" style="margin-bottom: 5px;">
+    <approchant-portail-directive usager="usager"
+                                  select-approchant="selectApprochant"
+                                  select-approchant-without-e-c="selectApprochantWithoutEC"
+                                  usager-orig="usager_orig">
+    </approchant-portail-directive>
+  </div>
+  <div class="col-sm-12" ng-repeat="usager in fne_usagers_ec" style="margin-bottom: 5px;">
+    <approchant-fne-directive usager="usager"
+                              select-approchant="selectApprochant"
+                              select-approchant-without-e-c="selectApprochantWithoutEC"
+                              usager-orig="usager_orig">
+    </approchant-fne-directive>
+  </div>
+
+  <div class="col-sm-12">
+    <button class="btn btn-success" ng-click="selectApprochant()">Aucune correspondance</button>
+    <br>
+    <i ng-show="usager.demandeur">(Attribution d'un nouveau numéro étranger)</i>
+  </div>
+
+  <div class="col-sm-12">
+    <sc-button class="pull-right btn btn-primary"
+               ng-click="search()"
+               label="'Rechercher'"
+               wait-for-class="fa fa-spinner fa-1 fa-pulse"
+               cancel-wait-for="searchDone">
+    </sc-button>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <a class="btn btn-default" ng-click="cancel()">Annuler</a>
+</div>

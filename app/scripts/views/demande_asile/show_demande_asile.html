@@ -1,0 +1,1251 @@
+<div class="actionbar container affix">
+  <div class="row">
+    <div class="col-md-2">
+      <navigationbar-directive></navigationbar-directive>
+    </div>
+    <div class="col-md-10">
+      <div class="buttonbar">
+        <div ng-if="demande_asile.statut && demande_asile.statut != 'PRETE_EDITION_ATTESTATION'">
+          <a class="btn btn-primary pull-right" href="#/usagers/{{usager.id}}{{overallView ? '?overall' : ''}}">Voir l'usager</a>
+          <div ng-if="canModifierDA">
+            <sc-button class="btn btn-primary pull-right"
+                       ng-click="editAttestation()"
+                       wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                       cancel-wait-for="editionAttestationDone"
+                       label="'Éditer une attestation'">
+            </sc-button>
+            <sc-button class="btn btn-primary pull-right"
+                       ng-click="requalification()"
+                       wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                       cancel-wait-for="requalifDone"
+                       label="'Modifier le type de procédure'">
+            </sc-button>
+            <sc-button class="btn btn-primary pull-right"
+                       ng-click="save()"
+                       wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                       cancel-wait-for="saveDone"
+                       label="'Sauvegarder la demande d\'asile'">
+            </sc-button>
+            <button class="btn btn-primary pull-right" ng-click="cloturer()"
+                    ng-show="cloturerAllowed">
+              Clôturer la demande d'asile
+            </button>
+            <a ng-show="demande_asile.identifiant_inerec" class="btn btn-primary pull-right"
+               ng-click="telemOfpra()">
+              Lien telemOFPRA
+            </a>
+          </div>
+        </div>
+        <sc-button class="btn btn-primary pull-right"
+                   ng-click="printAttestation()"
+                   ng-show="demande_asile.statut && demande_asile.statut == 'PRETE_EDITION_ATTESTATION' &&
+                            canModifierDA"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="attribAttestationDone"
+                   label="'Attribuer une attestation au demandeur'">
+        </sc-button>
+        <sc-button class="btn btn-primary pull-right"
+                   ng-show="demande_asile.statut != 'PRETE_EDITION_ATTESTATION'"
+                   ng-click="printDA()"
+                   wait-for-class="fa fa-spinner fa-1 fa-pulse"
+                   cancel-wait-for="printDADone"
+                   label-class="'fa fa-print'"
+                   label="'Télécharger la demande d\'asile'">
+        </sc-button>
+      </div>
+    </div>
+  </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+<div class="content container">
+  <div class="row">
+    <div class="col-md-2 left-content"></div>
+    <div class="col-md-10 right-content">
+
+      <div>
+        <h3>Informations de demande d'asile</h3>
+        <hr align="left" />
+
+        <div class="col-sm-12 thumbnail">
+
+          <div class="col-sm-6">
+            <simple-text-input-directive
+              form_label="'Statut'"
+              form_icon="'file'"
+              form_disabled="uDisabled"
+              form_ng_model="demande_asile.statut"
+              form_placeholder="''"
+              form_origin="demande_asile.statut"
+              form_error="">
+            </simple-text-input-directive>
+          </div>
+          <div class="col-sm-6">
+            <simple-text-input-directive
+              form_label="'N° Etranger'"
+              form_icon="'user'"
+              form_disabled="true"
+              form_ng_model="usager.identifiant_agdref"
+              form_placeholder="''"
+              form_origin="usager.identifiant_agdref"
+              form_error="">
+            </simple-text-input-directive>
+          </div>
+          <div class="col-sm-6">
+            <simple-text-input-directive
+              form-label="'N° Eurodac'"
+              form-icon="'key'"
+              form-disabled="true"
+              form-ng-model="demande_asile.usager_identifiant_eurodac"
+              form-placeholder="''"
+              form-origin="demande_asile.usager_identifiant_eurodac"
+              form-error="">
+            </simple-text-input-directive>
+          </div>
+          <div class="col-sm-6">
+            <date-text-input-directive
+              label="'Date de demande'"
+              active="!uDisabled"
+              model="demande_asile.date_demande"
+              origin_model="demande_asile.date_demande"
+              error=""
+              approximative="false"
+              approximative_model="">
+            </date-text-input-directive>
+          </div>
+        </div>
+
+        <div class="col-sm-12 thumbnail">
+          <div class="col-sm-12" style="padding: 0;">
+            <div class="col-sm-6">
+              <select-referential-directive model="demande_asile.type_demande"
+                                            choices="type_demande"
+                                            label="'Type de demande'"
+                                            ref-disabled="true">
+              </select-referential-directive>
+            </div>
+            <div class="col-sm-6">
+              <simple-text-input-directive
+                form-label="'Orgnanisme à l\'origine du type de la demande'"
+                form-disabled="true"
+                form-ng-model="demande_asile.acteur_type_demande"
+                form-origin="demande_asile.acteur_type_demande">
+              </simple-text-input-directive>
+            </div>
+          </div>
+          <div class="col-sm-6" ng-if="demande_asile.type_demande == 'REEXAMEN'">
+            <simple-text-input-directive
+              form-label="'Numéro du réexamen'"
+              form-disabled="true"
+              form-ng-model="demande_asile.numero_reexamen"
+              form-origin="demande_asile.numero_reexamen">
+            </simple-text-input-directive>
+          </div>
+        </div>
+
+        <div class="col-sm-12 thumbnail">
+          <div class="col-sm-6 form-group">
+            <label class="label-control">Décision sur délivrance de l'attestation *</label>
+            <br />
+            <span toggle-switch-directive
+              ng-model="demande_asile.decision_sur_attestation"
+              left-label="Oui"
+              knob-label=""
+              right-label="Non"
+              switch-size="small"
+              left-label-color="royalblue"
+              is-summarised="true || uDisabled"
+              right-label-color="red">
+            </span>
+            <div ng-show="demande_asile._errors.decision_sur_attestation" class="alert alert-danger">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{demande_asile._errors.decision_sur_attestation}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <date-text-input-directive
+              label="'Date de décision sur attestation'"
+              active="!uDisabled"
+              model="demande_asile.date_decision_sur_attestation"
+              origin_model="demande_asile.date_demande_decision_sur_attestation"
+              error=""
+              approximative="false"
+              approximative_model=""
+              today>
+            </date-text-input-directive>
+          </div>
+        </div>
+
+        <div class="col-sm-12 thumbnail">
+
+          <div class="alert alert-danger" ng-show="_errors">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{_errors}}
+          </div>
+
+          <div class="col-sm-12"></div>
+
+          <div class="col-sm-12"></div>
+          <div class="col-sm-6">
+            <simple-text-input-directive
+              form_label="'Type de procédure *'"
+              form_icon="'file'"
+              form_disabled="uDisabled"
+              form_ng_model="demande_asile.procedure.type"
+              form_placeholder="''"
+              form_origin="demande_asile.procedure.type"
+              form_error="">
+            </simple-text-input-directive>
+          </div>
+          <div class="col-sm-6">
+            <select-referential-directive
+              model_listener="demande_asile"
+              label="'Motif de qualification *'"
+              model="demande_asile.procedure.motif_qualification"
+              ref_disabled="uDisabled"
+              icon="'tag'"
+              error_model=""
+              choices="selectMotifQualification"
+              placeholder="''">
+            </select-referential-directive>
+          </div>
+          <div class="col-sm-6">
+            <date-text-input-directive
+              label="'Date de notification *'"
+              active="!uDisabled"
+              model="demande_asile.procedure.date_notification"
+              origin-model="demande_asile.procedure.date_notification"
+              error=""
+              approximative="false"
+              approximative-model="">
+            </date-text-input-directive>
+          </div>
+          <div class="col-sm-6">
+            <simple-text-input-directive
+              form_label="'Organisme à l\'origine de la qualification *'"
+              form_icon="'file'"
+              form_disabled="uDisabled"
+              form_ng_model="organisme_qualificateur[demande_asile.procedure.acteur]"
+              form_placeholder="''"
+              form_origin="organisme_qualificateur[demande_asile.procedure.acteur]"
+              form_error="">
+            </simple-text-input-directive>
+          </div>
+        </div>
+        <div class="col-sm-12 thumbnail">
+          <div class="col-sm-6">
+            <date-text-input-directive
+              label="'Date d\'arrivée en France *'"
+              active="!overallView && demande_asile.statut != 'PRETE_EDITION_ATTESTATION' &&
+                      user.role != 'SUPPORT_NATIONAL'"
+              model="demande_asile.date_entree_en_france"
+              origin_model="demande_asile.date_entree_en_france"
+              approximative="true"
+              approximative_model="demande_asile.date_entree_en_france_approximative"
+              error="demande_asile._errors.date_entree_en_france">
+            </date-text-input-directive>
+          </div>
+          <div class="col-sm-6">
+            <date-text-input-directive
+              label="'Date de départ du pays d\'origine *'"
+              active="!overallView && demande_asile.statut != 'PRETE_EDITION_ATTESTATION' &&
+                      user.role != 'SUPPORT_NATIONAL'"
+              model="demande_asile.date_depart"
+              origin_model="demande_asile.date_depart"
+              approximative="true"
+              approximative_model="demande_asile.date_depart_approximative"
+              error="demande_asile._errors.date_depart">
+            </date-text-input-directive>
+          </div>
+
+          <div class="col-sm-6">
+            <select-referential-directive
+              model-listener="demande_asile"
+              label="'Condition d\'entrée en France *'"
+              model="demande_asile.condition_entree_france"
+              ref-disabled="!canModifierDA || demande_asile.statut == 'PRETE_EDITION_ATTESTATION'"
+              icon=""
+              error-model="demande_asile._errors.condition_entree_france"
+              choices="conditionEntreeFrance"
+              placeholder="''">
+            </select-referential-directive>
+          </div>
+
+          <div class="col-sm-6">
+            <label class="label-control">Visa *</label>
+            <select ng-model="demande_asile.visa" class="form-control"
+                    ng-disabled="!canModifierDA || demande_asile.statut == 'PRETE_EDITION_ATTESTATION'">
+              <option selected="selected" value="AUCUN">Aucun visa</option>
+              <option value="C">Visa C</option>
+              <option value="D">Visa D</option>
+            </select><br />
+            <span ng-if="demande_asile._errors.visa" class="alert alert-danger">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+              {{demande_asile._errors.visa}}
+            </span>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label class="label-control">Conditions exceptionnelles d'accueil *</label>
+              <span toggle-switch-directive
+                ng-model="demande_asile.conditions_exceptionnelles_accueil"
+                left-label="Non"
+                knob-label=""
+                right-label="Oui"
+                switch-size="small"
+                left-label-color="red"
+                is-summarised="!canModifierDA || demande_asile.statut == 'PRETE_EDITION_ATTESTATION'"
+                left-value="false"
+                right-value="true"
+                right-label-color="green">
+              </span>
+              <div ng-show="demande_asile._errors.conditions_exceptionnelles_accueil" class="alert alert-danger">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                {{demande_asile._errors.conditions_exceptionnelles_accueil}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <select-referential-directive
+              model-listener="usager"
+              label="'Motif conditions exceptionnelles d\'accueil *'"
+              model="demande_asile.motif_conditions_exceptionnelles_accueil"
+              ref-disabled="!canModifierDA || demande_asile.statut == 'PRETE_EDITION_ATTESTATION'"
+              icon=""
+              error-model="demande_asile._errors.motif_conditions_exceptionnelles_accueil"
+              choices="motifsConditionsExceptionnellesAccueil"
+              placeholder="''"
+              ng-show="demande_asile.conditions_exceptionnelles_accueil">
+            </select-referential-directive>
+          </div>
+
+          <div class="col-sm-12"></div>
+          <div class="col-sm-6">
+            <array-input-directive
+              label="'Pays traversés'"
+              u-disabled="true"
+              model="demande_asile.pays_traverses"
+              origin_model="demande_asile.pays_traverses">
+            </array-input-directive>
+          </div>
+        </diV>
+
+        <div class="col-sm-12">
+          <div class="panel-group" id="connectors" role="tablist" aria-multiselectable="true">
+
+            <div class="panel panel-default"
+                 ng-if="show_decisions_attestation &&
+                        demande_asile.type_demande == 'REEXAMEN' &&
+                        demande_asile.decisions_attestation.length">
+              <div class="panel-heading" role="tab" id="headingDecisionsAttestation"
+                   style="background-color: #d0d0d0;">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" href=".collapseDecisions"
+                     aria-expanded="true" aria-controls="">
+                    <i class="fa fa-angle-down"></i> Décisions de délivrance d'attestation
+                  </a>
+                </h4>
+              </div>
+              <div class="collapseDecisions panel-collapse collapse collapsed"
+                   role="tabpanel" aria-labelledby="headingDecisionsAttestation">
+                <div class="panel-body">
+                  <div class="thumbnail" style="background: #f2f2f2;"
+                       ng-repeat="decision in demande_asile.decisions_attestation">
+                   <simple-text-input-directive
+                     form-label="'Type de l\'attestation'"
+                     form-icon="''"
+                     form-disabled="true"
+                     form-ng-model="SOUS_TYPE_DOCUMENT[decision.sous_type_document]"
+                     form-origin="decision.sous_type_document">
+                   </simple-text-input-directive>
+                   <div class="form-group">
+                     <label class="label-control">Décision sur délivrance de l'attestation</label>
+                     <br>
+                     <span toggle-switch-directive
+                       ng-model="decision.delivrance"
+                       left-label="Oui"
+                       knob-label=""
+                       right-label="Non"
+                       switch-size="small"
+                       left-label-color="royalblue"
+                       is-summarised="true"
+                       right-label-color="red">
+                     </span>
+                   </div>
+                   <simple-text-input-directive
+                     form-label="'Motif de la décision sur attestation'"
+                     form-icon="''"
+                     form-disabled="true"
+                     form-ng-model="MOTIF_DELIVRANCE_ATTESTATION[decision.motif]"
+                     form-origin="MOTIF_DELIVRANCE_ATTESTATION[decision.motif]">
+                   </simple-text-input-directive>
+                   <date-text-input-directive
+                     label="'Date de la décision'"
+                     active="false"
+                     model="decision.date_decision"
+                     origin-model="decision.date_decision">
+                   </date-text-input-directive>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel panel-primary" ng-if="usager.eloignement">
+              <div class="panel-heading" role="tab" id="headingEloignement">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" href=".collapseEloignement" aria-expanded="true" aria-controls="">
+                    <i class="fa fa-angle-down"></i> Eloignement
+                  </a>
+                </h4>
+              </div>
+              <div class="collapseEloignement panel-collapse collapse collapsed" role="tabpanel" aria-labelledby="headingEloignement">
+                <div class="panel-body">
+
+                  <date-text-input-directive
+                    label="'Date d\'éxécution'"
+                    active="!uDisabled"
+                    model="usager.eloignement.date_execution"
+                    origin_model="usager.eloignement.date_execution">
+                  </date-text-input-directive>
+
+                  <date-text-input-directive
+                    label="'Date de décision'"
+                    active="!uDisabled"
+                    model="usager.eloignement.date_decision"
+                    origin_model="usager.eloignement.date_decision">
+                  </date-text-input-directive>
+
+                  <div class="form-group">
+                    <label class="label-control">Exécution</label>
+                    <br />
+                    <span toggle-switch-directive
+                      ng-model="usager.eloignement.execution"
+                      left-label="Oui"
+                      knob-label=""
+                      right-label="Non"
+                      switch-size="small"
+                      left-label-color="royalblue"
+                      is-disabled="usager.eloignement.execution == undefined"
+                      is-summarised="usager.eloignement.execution != undefined"
+                      right-label-color="red">
+                    </span>
+                  </div>
+
+                  <date-text-input-directive
+                    label="'Date exécution'"
+                    active="!uDisabled"
+                    model="usager.eloignement.date_execution"
+                    origin_model="usager.eloignement.date_execution">
+                  </date-text-input-directive>
+                  <simple-text-input-directive
+                    form_label="'Délai départ volontaire'"
+                    form_icon="'user'"
+                    form_disabled="uDisabled"
+                    form_ng_model="usager.eloignement.delai_depart_volontaire"
+                    form_placeholder="''"
+                    form_origin="usager.eloignement.delai_depart_volontaire">
+                  </simple-text-input-directive>
+
+                  <div class="form-group">
+                    <label class="label-control">Contentieux</label>
+                    <br />
+                    <span toggle-switch-directive
+                      ng-model="usager.eloignement.contentieux"
+                      left-label="Oui"
+                      knob-label=""
+                      right-label="Non"
+                      switch-size="small"
+                      left-label-color="royalblue"
+                      is-disabled="usager.eloignement.contentieux == undefined"
+                      is-summarised="usager.eloignement.contentieux != undefined"
+                      right-label-color="red">
+                    </span>
+                  </div>
+                  <div class="form-group" ng-show="usager.eloignement.decision_contentieux">
+                    <label class="label-control">Décision contentieux</label>
+                    <div class="thumbnail disabled">
+                      {{usager.eloignement.decision_contentieux}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="panel panel-primary" ng-if="demande_asile.identifiant_inerec">
+              <div class="panel-heading" role="tab" id="headingInerec">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" href=".collapseInerec" aria-expanded="true" aria-controls="">
+                    <i class="fa fa-angle-down"></i> Introduction OFPRA
+                  </a>
+                </h4>
+              </div>
+              <div class="collapseInerec panel-collapse collapse collapsed" role="tabpanel" aria-labelledby="headingInerec">
+                <div class="panel-body">
+                  <div class="col-sm-6">
+                    <simple-text-input-directive
+                      form_label="'Identifiant INEREC'"
+                      form_icon="'user'"
+                      form_disabled="uDisabled"
+                      form_ng_model="demande_asile.identifiant_inerec"
+                      form_placeholder="''"
+                      form_origin="demande_asile.identifiant_inerec"
+                      form_error="">
+                    </simple-text-input-directive>
+                  </div>
+                  <div class="col-sm-6">
+                    <date-text-input-directive
+                      label="'Date d\'introduction d\'OFPRA'"
+                      active="!uDisabled"
+                      model="demande_asile.date_introduction_ofpra"
+                      origin_model="demande_asile.date_introduction_ofpra"
+                      error=""
+                      approximative="false"
+                      approximative_model="">
+                    </date-text-input-directive>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="panel panel-primary" ng-if="demande_asile.dublin">
+              <div class="panel-heading" role="tab" id="headingDublin">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" href=".collapseDublin" aria-expanded="true" aria-controls="">
+                    <i class="fa fa-angle-down"></i> Informations DUBLIN
+                  </a>
+                </h4>
+              </div>
+              <div class="collapseDublin panel-collapse collapse in" role="tabpanel" aria-labelledby="headingDublin">
+                <div class="panel-body">
+                  <div class="col-sm-12">
+
+                    <date-text-input-directive
+                      label="'Date de demande à l\'état membre'"
+                      active="!uDisabled"
+                      model="demande_asile.dublin.date_demande_EM"
+                      origin_model="demande_asile.dublin.date_demande_EM">
+                    </date-text-input-directive>
+                    <date-text-input-directive
+                      label="'Date de réponse de l\'état membre'"
+                      active="!uDisabled"
+                      model="demande_asile.dublin.date_reponse_EM"
+                      origin_model="demande_asile.dublin.date_reponse_EM">
+                    </date-text-input-directive>
+                    <select-referential-directive
+                      model_listener="demande_asile"
+                      label="'Etats membres *'"
+                      model="demande_asile.dublin.EM"
+                      ref_disabled="uDisabled"
+                      icon="'map-marker'"
+                      url="'referentiels/pays'" placeholder="''">
+                    </select-referential-directive>
+                    <div class="form-group" ng-show="demande_asile.dublin.reponse_EM">
+                      <label class="label-control">Réponse de l'état Membre</label>
+                      <div class="thumbnail disabled">
+                        {{demande_asile.dublin.reponse_EM}}
+                      </div>
+                    </div>
+                    <date-text-input-directive
+                      label="'Date de décision'"
+                      active="!uDisabled"
+                      model="demande_asile.dublin.date_decision"
+                      origin_model="demande_asile.dublin.date_decision">
+                    </date-text-input-directive>
+
+                    <div class="form-group">
+                      <label class="label-control">Exécution</label>
+                      <br />
+                      <span toggle-switch-directive
+                        ng-model="demande_asile.dublin.execution"
+                        left-label="Oui"
+                        knob-label=""
+                        right-label="Non"
+                        switch-size="small"
+                        left-label-color="royalblue"
+                        is-disabled="demande_asile.dublin.execution == undefined"
+                        is-summarised="demande_asile.dublin.execution != undefined"
+                        right-label-color="red">
+                      </span>
+                    </div>
+                    <date-text-input-directive
+                      label="'Date exécution'"
+                      active="!uDisabled"
+                      model="demande_asile.dublin.date_execution"
+                      origin_model="demande_asile.dublin.date_execution">
+                    </date-text-input-directive>
+                    <simple-text-input-directive
+                      form_label="'Délai départ volontaire'"
+                      form_icon="'user'"
+                      form_disabled="uDisabled"
+                      form_ng_model="demande_asile.dublin.delai_depart_volontaire"
+                      form_placeholder="''"
+                      form_origin="demande_asile.dublin.delai_depart_volontaire">
+                    </simple-text-input-directive>
+
+                    <div class="form-group">
+                      <label class="label-control">Contentieux</label>
+                      <br />
+                      <span toggle-switch-directive
+                        ng-model="demande_asile.dublin.contentieux"
+                        left-label="Oui"
+                        knob-label=""
+                        right-label="Non"
+                        switch-size="small"
+                        left-label-color="royalblue"
+                        is-disabled="demande_asile.dublin.contentieux == undefined"
+                        is-summarised="demande_asile.dublin.contentieux != undefined"
+                        right-label-color="red">
+                      </span>
+                    </div>
+                    <div class="form-group" ng-show="demande_asile.dublin.decision_contentieux">
+                      <label class="label-control">Décision contentieux</label>
+                      <div class="thumbnail disabled">
+                        {{demande_asile.dublin.decision_contentieux}}
+                      </div>
+                    </div>
+
+                    <date-text-input-directive
+                      label="'Date de signalement de la fuite'"
+                      active="!uDisabled"
+                      model="demande_asile.dublin.date_signalement_fuite"
+                      origin_model="demande_asile.dublin.date_signalement_fuite">
+                    </date-text-input-directive>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="panel panel-primary" ng-if="display_requalifications">
+              <div class="panel-heading" role="tab" id="headingRequal">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" href=".collapseRequal"
+                     aria-expanded="true" aria-controls="">
+                    <i class="fa fa-angle-down"></i> Historique des requalifications
+                  </a>
+                </h4>
+              </div>
+              <div class="collapseRequal panel-collapse collapse collapsed" role="tabpanel" aria-labelledby="headingRequal">
+                <div class="panel-body">
+                  <div style="background: #f2f2f2;" ng-repeat="requal in demande_asile.procedure.requalifications">
+                    <div class="thumbnail">
+                      <date-text-input-directive
+                        label="'Date de qualification'"
+                        active="!uDisabled"
+                        model="requal.date"
+                        origin_model="requal.date">
+                      </date-text-input-directive>
+                      <date-text-input-directive
+                        label="'Date de notification'"
+                        active="!uDisabled"
+                        model="requal.date_notification"
+                        origin_model="requal.date_notification">
+                      </date-text-input-directive>
+                      <simple-text-input-directive
+                        form_label="'Organisme qualificateur'"
+                        form_icon="'user'"
+                        form_disabled="uDisabled"
+                        form_ng_model="requal.ancien_acteur"
+                        form_placeholder="''"
+                        form_origin="requal.ancien_acteur">
+                      </simple-text-input-directive>
+                      <simple-text-input-directive
+                        form_label="'Type'"
+                        form_icon="'user'"
+                        form_disabled="uDisabled"
+                        form_ng_model="requal.ancien_type"
+                        form_placeholder="''"
+                        form_origin="requal.ancien_type">
+                      </simple-text-input-directive>
+                      <select-referential-directive ng-show="requal.ancien_motif_qualification"
+                        model_listener="requal"
+                        label="'Motif de qualification'"
+                        model="requal.ancien_motif_qualification"
+                        ref_disabled="true"
+                        icon="'tag'"
+                        error_model=""
+                        choices="qualification[requal.ancien_type]"
+                        placeholder="''">
+                      </select-referential-directive>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel panel-primary" ng-if="demande_asile.decisions_definitives">
+              <div class="panel-heading" role="tab" id="headingDecisions">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" href=".collapseDecisions" aria-expanded="true" aria-controls="">
+                    <i class="fa fa-angle-down"></i> Décisions définitives
+                  </a>
+                </h4>
+              </div>
+              <div class="collapseDecisions panel-collapse collapse collapsed" role="tabpanel" aria-labelledby="headingDecisions">
+                <div class="panel-body">
+                  <div class="thumbnail" style="background: #f2f2f2;" ng-repeat="decision in demande_asile.decisions_definitives">
+                    <simple-text-input-directive
+                      form_label="'Nature'"
+                      form_icon="'user'"
+                      form_disabled="uDisabled"
+                      form_ng_model="da_resultat[decision.entite][decision.nature] + ' - ' + da_nature[decision.entite][decision.nature]"
+                      form_placeholder="''"
+                      form_origin="da_resultat[decision.entite][decision.nature] + ' - ' + da_nature[decision.entite][decision.nature]">
+                    </simple-text-input-directive>
+                    <select-referential-directive
+                      several="true"
+                      model-listener="decision.pays_exclus"
+                      label="'Pays exclus'"
+                      model="decision.pays_exclus"
+                      ref-disabled="uDisabled"
+                      icon="'map-marker'"
+                      url="'referentiels/pays'" placeholder="''">
+                    </select-referential-directive>
+                    <simple-text-input-directive
+                      form_label="'Numéro skipper'"
+                      form_icon="'user'"
+                      form_disabled="uDisabled"
+                      form_ng_model="decision.numero_skipper"
+                      form_placeholder="''"
+                      form_origin="decision.numero_skipper">
+                    </simple-text-input-directive>
+                    <simple-text-input-directive
+                      form_label="'Origine de la décision'"
+                      form_icon="'user'"
+                      form_disabled="uDisabled"
+                      form_ng_model="decision.entite"
+                      form_placeholder="''"
+                      form_origin="decision.entite">
+                    </simple-text-input-directive>
+                    <date-text-input-directive
+                      label="'Date de la décision'"
+                      active="!uDisabled"
+                      model="decision.date"
+                      origin_model="decision.date">
+                    </date-text-input-directive>
+                    <date-text-input-directive
+                      label="'Date de premier accord'"
+                      active="!uDisabled"
+                      model="decision.date_premier_accord"
+                      origin_model="decision.date_premier_accord">
+                    </date-text-input-directive>
+                    <date-text-input-directive
+                      label="'Date de notification'"
+                      active="!uDisabled"
+                      model="decision.date_notification"
+                      origin_model="decision.date_notification">
+                    </date-text-input-directive>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel panel-primary"
+                 ng-if="demande_asile.type_demande == 'REEXAMEN' &&
+                        demande_asile.recevabilites &&
+                        demande_asile.recevabilites.length">
+              <div class="panel-heading" role="tab" id="headingRecevabilite">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" href=".collapseRecevabilite"
+                     aria-expanded="true" aria-controls="">
+                    <i class="fa fa-angle-down"></i> Recevabilité - Irrecevabilité
+                  </a>
+                </h4>
+              </div>
+              <div class="collapseRecevabilite panel-collapse collapse collapsed"
+                   role="tabpanel" aria-labelledby="headingRecevabilite">
+                <div class="panel-body">
+                  <div class="thumbnail" style="background: #f2f2f2;"
+                       ng-repeat="recevabilite in demande_asile.recevabilites">
+                    <div class="form-group">
+                      <label class="label-control">Nature de la décision</label>
+                      <br>
+                      <span toggle-switch-directive
+                            ng-model="recevabilite.recevabilite"
+                            left-label="Recevable"
+                            knob-label=""
+                            right-label="Irrecevable"
+                            switch-size="small"
+                            left-label-color="royalblue"
+                            is-summarised="true"
+                            right-label-color="red">
+                      </span>
+                    </div>
+                    <date-text-input-directive
+                      label="'Date de qualification'"
+                      active="false"
+                      model="recevabilite.date_qualification"
+                      origin-model="recevabilite.date_qualification">
+                    </date-text-input-directive>
+                    <date-text-input-directive
+                      label="'Date de notification'"
+                      active="false"
+                      model="recevabilite.date_notification"
+                      origin-model="recevabilite.date_notification">
+                    </date-text-input-directive>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <h3>Informations de l'usager</h3>
+        <hr align="left" />
+
+        <div class="col-sm-12 thumbnail"
+             ng-if="demande_asile.statut && demande_asile.statut != 'PRETE_EDITION_ATTESTATION'">
+          <h3>Droits</h3>
+          <hr align="left">
+
+          <table border="2" class="table" cellspacing="1">
+            <thead>
+              <th>Type d'attestation</th>
+              <th>Date de début de validité</th>
+              <th>Date de fin de validité</th>
+              <th>Supports</th>
+            </thead>
+            <tbody>
+              <tr ng-repeat="droit in droits">
+                <td>
+                  {{SOUS_TYPE_DOCUMENT[droit.sous_type_document]}}
+                  <span ng-show="droit.sous_type_document != 'EN_RENOUVELLEMENT' &&
+                                 $index > 0 &&
+                                 droits[$index-1].sous_type_document == droit.sous_type_document">
+                    <br>(réédition)
+                  </span>
+                </td>
+                <td>
+                  {{droit.date_debut_validite | xinDate : 'shortDate' : '+0000'}}
+                </td>
+                <td>
+                  {{droit.date_fin_validite | xinDate : 'shortDate' : '+0000'}}
+                </td>
+                <td>
+                  <div ng-repeat="support in droit.supports">
+                    N° <strong>{{support.numero_serie}}</strong>
+                    délivré le
+                    <strong>{{support.date_delivrance | xinDate : 'shortDate' : '+0000'}}</strong>
+                    à <strong>{{lieux_delivrances[support.lieu_delivrance.id]}}</strong>
+                    <span ng-show="support.motif_annulation">
+                      <strong style="color:red">[Annulé pour {{support.motif_annulation}}]</strong>
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <span ng-show="demande_asile.renouvellement_attestation > 1 &&
+                         demande_asile.renouvellement_attestation-2 < nb_en_renouvellement">
+            Dont {{nb_en_renouvellement-(demande_asile.renouvellement_attestation-2)}}
+            réédition<span ng-show="nb_en_renouvellement-(demande_asile.renouvellement_attestation-2) > 1">s</span>
+            d'attestation au statut EN_RENOUVELLEMENT
+          </span>
+        </div>
+
+        <div class="col-sm-12 thumbnail">
+          <h3>Identité</h3>
+          <hr align="left" />
+          <div class="col-sm-5">
+
+            <simple-text-input-directive
+              form_label="'N° usager'"
+              form_icon="'user'"
+              form_disabled="true"
+              form_ng_model="usager.id"
+              form_placeholder="''"
+              form_origin="usager.id">
+            </simple-text-input-directive>
+
+            <simple-text-input-directive
+              form_label="'Numéro étranger *'"
+              form_icon="'user'"
+              form_disabled="uDisabled"
+              form_ng_model="usager.identifiant_agdref"
+              form_placeholder="''"
+              form_origin="usager.identifiant_agdref"
+              form_error="usager._errors.identifiant_agdref">
+            </simple-text-input-directive>
+
+            <simple-text-input-directive
+              form_label="'Identifiant DN@'"
+              form_icon="'user'"
+              form_disabled="uDisabled"
+              form_ng_model="usager.identifiant_dna"
+              form_placeholder="''"
+              form_origin="usager.identifiant_dna"
+              form_error="usager._errors.identifiant_dna">
+            </simple-text-input-directive>
+
+            <simple-text-input-directive
+              form_label="'Nom *'"
+              form_icon="'user'"
+              form_disabled="uDisabled"
+              form_ng_model="usager.nom"
+              form_placeholder="''"
+              form_origin="usager.nom"
+              form_error="usager._errors.nom">
+            </simple-text-input-directive>
+
+            <simple-text-input-directive
+              form_label="'Nom d\'usage'"
+              form_disabled="uDisabled"
+              form_icon="'user'"
+              form_error="usager._errors.nom_usage"
+              form_origin="usager.nom_usage"
+              form_ng_model="usager.nom_usage"
+              form_placeholder="''">
+            </simple-text-input-directive>
+
+            <list-text-input-directive
+              label="'Prénom(s) *'"
+              upper_first_letter="true"
+              model="usager.prenoms"
+              error="usager._errors.prenoms"
+              icon="'user'"
+              u-disabled="uDisabled"
+              placeholder="''"
+              origin-model="origin_usager">
+            </list-text-input-directive>
+
+            <div class="form-group">
+              <label class="label-control">Sexe *</label>
+              <span toggle-switch-directive
+                ng-model="usager.sexe"
+                left-label="M"
+                knob-label=""
+                right-label="F"
+                switch-size="small"
+                left-label-color="royalblue"
+                is-summarised="true"
+                right-label-color="red"
+                left-value="'M'"
+                right-value="'F'">
+              </span>
+            </div>
+          </div>
+
+          <div class="col-sm-1"></div>
+
+          <div class="col-sm-5">
+            <photo-directive
+              photo-label="'Photo'"
+              photo-origin="usager.photo"
+              usager="usager"
+              photo="usager.photo"
+              photo-disabled="uDisabled">
+            </photo-directive>
+          </div>
+          <div class="col-sm-1"></div>
+        </div>
+
+
+        <div class="col-sm-12 thumbnail">
+          <div class="col-sm-5">
+
+            <h3>Informations de naissance</h3>
+            <hr align="left" />
+            <date-text-input-directive
+              label="'Date de naissance *'"
+              active="!uDisabled"
+              model="usager.date_naissance"
+              origin_model="usager.date_naissance"
+              error="usager._errors.date_naissance"
+              approximative="true"
+              approximative_model="usager.date_naissance_approximative">
+            </date-text-input-directive>
+
+            <div class="col-sm-12" ng-show="(typeUsager=='usager1') && minor_child">
+              <h4>Profil de demande</h4>
+              <select ng-disabled="uDisabled" class="form-control" ng-model="profilDemande">
+                <option disabled="uDisabled" value="">Choisissez un profil de demande</option>
+                <option value="MINEUR_ISOLE">Mineur isolé</option>
+                <option value="MINEUR_ACCOMPAGNANT">Mineur accompagnant</option>
+              </select>
+              <h4>Représentant légal</h4>
+              <simple-text-input-directive
+                form_label="'Nom du représentant'"
+                form_disabled="uDisabled"
+                form_origin="usager.representant_legal_nom"
+                form_error="usager._errors.representant_legal_nom"
+                form_icon="'user'"
+                form_ng_model="usager.representant_legal_nom"
+                form_placeholder="''">
+              </simple-text-input-directive>
+              <simple-text-input-directive
+                form_label="'Prénom du représentant'"
+                form_disabled="uDisabled"
+                form_origin="usager.representant_legal_prenom"
+                form_error="usager._errors.representant_legal_prenom"
+                form_icon="'user'"
+                form_ng_model="usager.representant_legal_prenom"
+                form_placeholder="''">
+              </simple-text-input-directive>
+              <div class="form-group">
+                <label class="label-control">Personne morale ? *</label>
+                <br />
+                <span toggle-switch-directive
+                  ng-model="usager.representant_legal_personne_morale"
+                  left-label="Oui"
+                  knob-label=""
+                  right-label="Non"
+                  switch-size="small"
+                  left-label-color="green"
+                  is-summarised="uDisabled"
+                  right-label-color="red">
+                </span>
+
+                <span ng-show="usager._errors.representant_legal_personne_morale" class="alert alert-danger">
+                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{usager._errors.representant_legal_personne_morale}}
+                </span>
+              </div>
+              <simple-text-input-directive
+                form_label="'Désignation de la personne morale'"
+                form_disabled="uDisabled"
+                form_hide="!usager.representant_legal_personne_morale"
+                form_origin="usager.representant_legal_personne_morale_designation"
+                form_error="usager._errors.representant_legal_personne_morale_designation"
+                form_icon="'user'"
+                form_ng_model="usager.representant_legal_personne_morale_designation"
+                form_placeholder="''">
+              </simple-text-input-directive>
+              <hr align="left" />
+            </div>
+
+            <simple-text-input-directive
+              form_label="'Ville de naissance *'"
+              form_disabled="uDisabled"
+              form_error="usager._errors.ville_naissance"
+              extend_icon="true"
+              form_icon="'map-marker'"
+              form_origin="usager.ville_naissance"
+              form_ng_model="usager.ville_naissance"
+              form_placeholder="''">
+            </simple-text-input-directive>
+
+            <select-referential-directive
+              model_listener="usager"
+              label="'Pays de naissance *'"
+              model="usager.pays_naissance"
+              ref_disabled="uDisabled"
+              icon="'map-marker'"
+              error_model="usager._errors.pays_naissance"
+              url="'referentiels/pays'" placeholder="''">
+            </select-referential-directive>
+
+            <select-referential-directive
+              model_listener="usager"
+              label="'Nationalité *'"
+              model="usager.nationalites"
+              ref_disabled="uDisabled"
+              icon="'flag'"
+              error_model="usager._errors.nationalites"
+              url="'referentiels/nationalites'"
+              multi_one="true"
+              placeholder="''">
+            </select-referential-directive>
+
+            <simple-text-input-directive
+              form_label="'Nom du père'"
+              form_disabled="uDisabled"
+              form_origin="usager.nom_pere"
+              form_error="usager._errors.nom_pere"
+              form_icon="'user'"
+              form_ng_model="usager.nom_pere"
+              form_placeholder="''">
+            </simple-text-input-directive>
+            <simple-text-input-directive
+              form_label="'Prénom du père'"
+              form_disabled="uDisabled"
+              form_icon="'user'"
+              form_origin="usager.prenom_pere"
+              form_error="usager._errors.prenom_pere"
+              form_ng_model="usager.prenom_pere"
+              form_placeholder="''">
+            </simple-text-input-directive>
+            <simple-text-input-directive
+              form_label="'Nom de la mère'"
+              form_disabled="uDisabled"
+              form_icon="'user'"
+              form_ng_model="usager.nom_mere"
+              form_origin="usager.nom_mere"
+              form_error="usager._errors.nom_mere"
+              form_placeholder="''">
+            </simple-text-input-directive>
+            <simple-text-input-directive
+              form_label="'Prénom de la mère'"
+              form_disabled="uDisabled"
+              form_icon="'user'"
+              form_ng_model="usager.prenom_mere"
+              form_origin="usager.prenom_mere"
+              form_error="usager._errors.prenom_mere"
+              form_placeholder="''">
+            </simple-text-input-directive>
+
+            <div ng-show="usager._errors.usager_info" class="alert alert-danger">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{usager._errors.usager_info}}
+            </div>
+          </div>
+
+          <div class="col-sm-1"></div>
+
+          <div class="col-sm-5" style="border-left: 1px solid #e2e2e2">
+
+            <h3>Informations complémentaires</h3>
+            <hr align="left">
+
+            <div class="form-group" style="z-index: 30" ng-if="!(typeUsager == 'usager2')">
+              <label class="label-control">Situation familiale *</label>
+              <div class="input-group" style="z-index: 20">
+                <div class="input-group-addon"><i class="fa fa-lg fa-street-view"></i></div>
+                <select style="z-index: 15"  ng-disabled="uDisabled" ng-model="usager.situation_familiale" class="form-control" data-dropup-auto="false" title="" required="required">
+                  <option value=""></option>
+                  <option value="CELIBATAIRE">Célibataire</option>
+                  <option value="DIVORCE">Divorcé(e)</option>
+                  <option value="MARIE">Marié(e)</option>
+                  <option value="CONCUBIN">Concubin(e)</option>
+                  <option value="SEPARE">Séparé(e)</option>
+                  <option value="VEUF">Veuf(ve)</option>
+                  <option value="PACSE">Pacsé(e)</option>
+                </select>
+                <div class="input-group-addon alert-warning" ng-if="usager.situation_familiale != usager.situation_familiale"><i class="fa fa-lg fa-pencil"></i></div>
+              </div>
+              <span ng-show="usager._errors.situation_familiale" class="alert alert-danger">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{usager._errors.situation_familiale}}
+              </span>
+            </div>
+
+            <select-referential-directive
+              model_listener="usager"
+              label="'Langue(s) comprise(s)'"
+              model="usager.langues"
+              several="true"
+              icon="'language'"
+              ref_disabled="uDisabled"
+              error_model="usager._errors.langues"
+              url="'referentiels/langues_iso639_2'"
+                            placeholder="''">
+            </select-referential-directive>
+
+            <select-referential-directive
+              model_listener="usager"
+              multi_one="true"
+              label="'Langue d\'audition à l\'OFPRA'"
+              model="usager.langues_audition_OFPRA"
+              error_model="usager._errors.langues_audition_OFPRA"
+              icon="'language'"
+              ref_disabled="uDisabled"
+              url="'referentiels/langues_OFPRA'"
+              placeholder="''">
+            </select-referential-directive>
+
+            <simple-text-input-directive
+              form_disabled="uDisabled"
+              form_label="'Téléphone'"
+              form_origin="usager.telephone"
+              form_icon="'phone'"
+              form_error="usager._errors.telephone"
+              form_ng_model="usager.telephone"
+              form_placeholder="''"
+              maxlength="22">
+            </simple-text-input-directive>
+
+            <simple-text-input-directive
+              form_disabled="uDisabled"
+              form_label="'Email'"
+              form_error="usager._errors.email"
+              form_icon="'at'"
+              form_origin="usager.email"
+              form_ng_model="usager.email"
+              form_placeholder="''">
+            </simple-text-input-directive>
+
+          </div>
+
+          <div class="col-sm-1"></div>
+        </div>
+        <div class="col-sm-12 thumbnail">
+          <h3>Localisations</h3>
+          <hr align="left" />
+
+          <div class="col-sm-12">
+            <div class="panel panel-default"
+                 ng-show="localisations.dna.data || localisations.agdref.data || localisations.ofpra.data">
+              <div class="panel-heading" role="tab" id="headingPartenaires">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" href=".collapsePartenaires" aria-expanded="true" aria-controls="">
+                    Mise à jour de l'adresse par un partenaire
+                  </a>
+                </h4>
+              </div>
+              <div class="collapsePartenaires panel-collapse collapse collapsed" role="tabpanel" aria-labelledby="headingPartenaires">
+                <div class="panel-body" ng-repeat="elt in localisations">
+                  <h4 ng-if="elt.data">{{elt.title}}:</h4>
+                  <div class="col-sm-12" ng-if="elt.data">
+                    <label class="label-control">Organisme à l'origine de la mise à jour</label>
+                    <input ng-disabled="true" class="form-control" ng-model="elt.data.organisme_origine" />
+
+                    <date-text-input-directive
+                      label="'Date de mise à jour'"
+                      active="false"
+                      model="elt.data.date_maj">
+                    </date-text-input-directive>
+
+                    <label class="label-control">Chez</label>
+                    <input ng-disabled="true" class="form-control" ng-model="elt.data.adresse.chez" />
+
+                    <label class="label-control">Complément</label>
+                    <input ng-disabled="true" class="form-control" ng-model="elt.data.adresse.complement" />
+
+                    <label class="label-control">Numéro de voie</label>
+                    <input ng-disabled="true" class="form-control" ng-model="elt.data.adresse.numero_voie" />
+
+                    <label class="label-control">Voie</label>
+                    <input ng-disabled="true" class="form-control" ng-model="elt.data.adresse.voie" />
+
+                    <label class="label-control">Informations liées à la ville</label>
+                    <div class="thumbnail col-sm-12">
+                      <div class="col-sm-12">
+                        <label class="label-control">Ville</label>
+                        <input ng-disabled="true" class="form-control" ng-model="elt.data.adresse.ville"/>
+
+                        <label class="label-control">Code Insee</label>
+                        <input ng-disabled="true" class="form-control" ng-model="elt.data.adresse.code_insee"/>
+
+                        <label class="label-control">Code Postal</label>
+                        <input ng-disabled="true" class="form-control" ng-model="elt.data.adresse.code_postal" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <select-referential-directive ng-if="elt.data"
+                    model_listener="elt.data.adresse.pays"
+                    label="'Pays'"
+                    model="elt.data.adresse.pays.code"
+                    icon="'map-marker'"
+                    url="'referentiels/pays'"
+                    ref_disabled="true">
+                  </select-referential-directive>
+                </div>
+              </div>
+            </div>
+
+            <h3>Adresse</h3>
+
+            <input-location-directive
+              location="portail.adresse"
+              u_disabled="true">
+            </input-location-directive>
+
+            <span ng-show="usager._errors.localisation" class="alert alert-danger">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{usager._errors.localisation}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

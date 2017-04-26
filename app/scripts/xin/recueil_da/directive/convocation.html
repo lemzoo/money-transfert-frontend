@@ -1,0 +1,117 @@
+<div style="width: 800px; height: 1200px; border: 3px solid black; text-align: center">
+  <br>
+  <img src="images/logo-de-la-republique-francaise.png" width="100px">
+  <br>
+  <br>
+  <br>
+  <br>
+  <div style="padding: 15px; text-align: left;">
+    <span>
+      <strong>
+        {{site.libelle}}
+        <br>
+        {{site.adresse.numero_voie}} {{site.adresse.voie}}
+        <br>
+        {{site.adresse.code_postal}} {{site.adresse.ville}}
+        <br>
+        <p></p>
+        Tél : {{site.telephone}}
+        <br>
+        Mél : {{site.email}}
+      </strong>
+    </span>
+  </div>
+  <strong>CONVOCATION POUR L'ENREGISTREMENT DE LA DEMANDE D'ASILE</strong><br>
+  <br>
+
+  <table>
+    <tr>
+      <td style="width: 550px; text-align: left; padding-left: 15px;" valign="top">
+        Nom : {{usager.nom}}<br>
+        <p></p>
+        <br>
+        Prénoms :
+        <span ng-repeat="(key, value) in usager.prenoms track by key">
+          <span ng-show="!$last">{{value}}, </span>
+          <span ng-show="$last">{{value}}</span>
+        </span>
+        <p></p>
+        <br>
+        Né(e) le : {{usager.date_naissance | xinDate: 'shortDate' : '+0000'}}<br>
+        <p></p>
+        <br>
+        A : {{usager.ville_naissance}}, {{pays_naissance}}<br>
+        <p></p>
+        <span ng-show="isMinor">
+          Mineur
+          <p></p>
+        </span>
+        Nationalité : <span ng-repeat="nationalite in nationalites">{{nationalite}}&nbsp;</span>
+        <p></p>
+        Adresse :
+        <p style="margin-left: 15px;">
+          {{usager.adresse.complement}}<br>
+          {{usager.adresse.numero_voie}} {{usager.adresse.voie}}<br>
+          {{usager.adresse.code_postal}} {{usager.adresse.ville}}
+        </p>
+        Chez : {{usager.adresse.chez}}<br>
+        <p>
+          <br>
+        </p>
+        <span ng-show="usager.enfants">
+          Nombre d'enfants présents : {{usager.enfants}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dont : {{usager.enfants_14}} ayant 14 ans et plus
+        </span>
+      </td>
+      <td style="width: 250px;" valign="top">
+        <img ng-show="usager.photo_premier_accueil.id && !usager.photo.id"
+             ng-src="{{apiUrl}}{{usager.photo_premier_accueil._links.data}}"
+             style="width: 164px; height: 170px; border: 3px solid black;">
+        <img ng-show="usager.photo.id"
+             ng-src="{{apiUrl}}{{usager.photo._links.data}}"
+             style="width: 164px; height: 170px; border: 3px solid black;">
+      </td>
+    </tr>
+  </table>
+
+  <br>
+  <div style="padding: 0 15px; text-align: left;">
+    est convoqué(e) au guichet unique asile de la Préfecture le {{dateConvocation | xinDate: 'longDate'}} à {{dateConvocation | xinDate: 'HH'}}h{{dateConvocation | xinDate: 'mm'}} pour l'enregistrement de la demande d'asile.
+    <p style="margin-left: 15px;">
+      Documents à présenter :<br>
+      <table>
+        <tr>
+          <td valign="top" style="width: 35px; text-align: center;">-</td>
+          <td valign="top">
+            Les indications relatives à son état civil ainsi que, le cas échéant, à celui de son partenaire avec lequel il est lié par une union civile ou de son concubin et à ses enfants à charge ;
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" style="width: 35px; text-align: center;">-</td>
+          <td valign="top">
+            Les documents justifiant qu’il est entré régulièrement en France ou, à défaut, toutes indications portant sur les conditions de son entrée en France et ses itinéraires de voyage à partir de son pays d’origine ;
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" style="width: 35px; text-align: center;">-</td>
+          <td valign="top">
+            Quatre photographies de face, tête nue, de format 3,5 cm x 4,5 cm, récentes et parfaitement ressemblantes ;
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" style="width: 35px; text-align: center;">-</td>
+          <td valign="top">
+            S’il est hébergé par un tiers : une attestation sur l’honneur de l’hébergeant et une photocopie de la pièce d’identité de celui-ci.
+          </td>
+        </tr>
+      </table>
+      <br>
+      Si la personne est déjà titulaire d’un titre de séjour délivré par les autorités françaises et en cours de validité, elle fournit uniquement les photographies et les documents justifiant de l’adresse de domiciliation s’il y a lieu.
+    </p>
+    <br><br><br>
+    <span class="pull-right" style="margin-right: 15px;">
+      A {{currentSite.adresse.ville}}, le {{today | xinDate: 'shortDate'}}
+      délivrée par :
+      <br>{{spa.libelle}}
+    </span>
+  </div>
+</div>

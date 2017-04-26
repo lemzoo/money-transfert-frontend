@@ -1,0 +1,21 @@
+<div class="actionbar container affix">
+  <div class="row">
+    <div class="col-md-2">
+      <navigationbar-directive></navigationbar-directive>
+    </div>
+    <div class="col-md-10">
+    </div>
+  </div>
+</div>
+<div resizable-directive ng-style="{ 'margin-top': marginTop }" class="clearfix"></div>
+
+<div class="content container">
+  <div class="row">
+    <div class="col-md-2 left-content"></div>
+    <div class="col-md-10 right-content">
+      <iframe class="iframe_inerec" frameborder="0" style="border:0; width:100%" ng-style="{ 'height': heightIframe + 'px' }" ng-src="{{iframeURL}}">
+        <p>Votre navigateur ne supporte pas les iframes.</p>
+      </iframe>
+    </div>
+  </div>
+</div>

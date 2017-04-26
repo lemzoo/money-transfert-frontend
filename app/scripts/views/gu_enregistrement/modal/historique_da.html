@@ -1,0 +1,95 @@
+<div class="modal-header">
+  <h3 style="margin: 5px;">Historique des demandes</h3>
+</div>
+
+<div class="modal-body">
+  <div class="thumbnail col-sm-12" style="background-color: #fafafa;"
+       ng-repeat="da in demandes_asile">
+    <div class="col-sm-12" style="margin-bottom: 3px;">
+      <strong class="col-sm-6 specific-margin">Type de demande</strong>
+      <div class="col-sm-6 thumbnail disabled specific-margin">
+        {{TYPE_DEMANDE[da.type_demande] || '-'}}
+      </div>
+    </div>
+    <div class="col-sm-12" ng-show="de.type_demande == 'REEXAMEN'" style="margin-bottom: 3px;">
+      <strong class="col-sm-6 specific-margin">Numéro reexamen</strong>
+      <div class="col-sm-6 thumbnail disabled specific-margin">{{da.numero_reexamen || '-'}}</div>
+    </div>
+    <div class="col-sm-12" style="margin-bottom: 3px;">
+      <strong class="col-sm-6 specific-margin">Numéro Eurodac</strong>
+      <div class="col-sm-6 thumbnail disabled specific-margin">
+        {{da.usager_identifiant_eurodac || '-'}}
+      </div>
+    </div>
+    <div class="col-sm-12" style="margin-bottom: 3px;">
+      <strong class="col-sm-6 specific-margin">Date d'enregistrement de la demande</strong>
+      <div class="col-sm-6 thumbnail disabled specific-margin">
+        {{da.date_enregistrement | xinDate : 'shortDate'}}
+      </div>
+    </div>
+    <div class="col-sm-12" style="margin-bottom: 3px;">
+      <strong class="col-sm-6 specific-margin">Statut</strong>
+      <div class="col-sm-6 thumbnail disabled specific-margin">{{DA_STATUT[da.statut]}}</div>
+    </div>
+    <div class="col-sm-12" style="margin-bottom: 3px;">
+      <strong class="col-sm-6 specific-margin">Date de la décision définitive</strong>
+      <div class="col-sm-6 thumbnail disabled specific-margin">
+        <span ng-if="da.decision_definitive.date">
+          {{da.decision_definitive.date | xinDate : 'shortDate'}}
+        </span>
+        <span ng-if="!da.decision_definitive.date">
+          N/A
+        </span>
+      </div>
+    </div>
+    <div class="col-sm-12">
+      <strong class="col-sm-6 specific-margin">Nature de la décision définitive</strong>
+      <div class="col-sm-6 thumbnail disabled specific-margin">
+        <span ng-if="da.decision_definitive.nature">
+          {{DECISION_DEFINITIVE_NATURE[da.decision_definitive.entite][da.decision_definitive.nature]}}
+        </span>
+        <span ng-if="!da.decision_definitive.nature">
+          N/A
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div ng-show="!demandes_asile.length && origine_usager == 'PORTAIL'">
+    Cet usager n'a pas de demande d'asile.
+  </div>
+  <div ng-show="origine_usager == 'FNE'">
+    Cet usager possède une demande d'asile dans le FNE.
+  </div>
+
+  <div>
+    <h4><strong>Recommandations</strong></h4>
+    <div ng-if="!demande_en_cours">
+      <div ng-show="recommendations.type_demande == 'PREMIERE_DEMANDE_ASILE'">
+        Type de demande : "Première demande d'asile".
+      </div>
+      <div ng-show="recommendations.type_demande == 'REEXAMEN'">
+        Type de demande : "Réexamen"
+        <br>
+        Numéro de réexamen : {{recommendations.numero_reexamen}}
+      </div>
+      <div ng-show="recommendations.type_demande == 'REOUVERTURE_DOSSIER'">
+        Type de demande : "Réouverture de dossier"
+      </div>
+    </div>
+    <div class="col-sm-12 alert alert-danger"
+         ng-if="demande_en_cours">
+      Cet usager a déjà une demande d'asile en cours dans le système d’information.
+      Il ne peut être sélectionné qu'en tant que "Non demandeur" dans ce recueil.
+    </div>
+  </div>
+  <br>
+  <div ng-if="!demande_en_cours">
+    <a class="btn btn-primary" ng-click="ok_and_apply()">Appliquer les recommandations</a>
+    <a class="btn btn-default" ng-click="ok_and_not_apply()">Ne pas appliquer les recommandations</a>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <a class="btn btn-default" ng-click="cancel()">Annuler</a>
+</div>

@@ -1,0 +1,26 @@
+<div class="modal-body">
+  <strong>Vous allez annuler ce recueil.</strong>
+  <br /><br />
+  <i><strong>Indiquez un motif d'annulation</strong></i>
+  <select class="form-control" ng-model="motif">
+    <option value="">Choisissez un motif d'annulation</option>
+    <option value="NON_PRESENTATION_RDV">Non présentation du demandeur au rendez-vous</option>
+    <option value="BESOIN_INFORMATION_COMPLEMENTAIRE">Besoin d'une information complémentaire</option>
+    <option value="INTERPRETE_NON_DISPONIBLE">Pas d'interprète disponible</option>
+    <option value="RETARD_PRESENTATION_DEMANDEUR">Présentation du demandeur avec retard</option>
+    <option value="PANNE_INFORMATIQUE">Panne informatique</option>
+    <option value="FAIT_EXTERIEUR">Fait extérieur</option>
+    <option value="ECHEC_PRISE_EMPREINTE">Echec de prise d'empreintes</option>
+    <option value="AUTRE">Autre</option>
+  </select>
+
+  <div ng-show="motif_error" class="alert alert-danger">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{motif_error}}
+  </div>
+
+</div>
+
+<div class="modal-footer">
+  <a class="btn btn-primary button-confirm" ng-click="ok()">Valider</a>
+  <a class="btn btn-default button-cancel" ng-click="cancel()">Annuler</a>
+</div>

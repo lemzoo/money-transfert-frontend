@@ -1,0 +1,30 @@
+<div class="modal-body">
+  <strong>
+    En validant, vous allez générer l'attestation de demande d'asile et ajouter informatiquement un nouveau droit à cet usager.
+    <br /><span style="color: red;">Rappel : utiliser l'imprimante avec le papier sécurisé pour imprimer l'attestation</span>
+    <br /><br />
+  </strong>
+
+  <date-text-input-directive
+    label="'Début de validité de la nouvelle attestation'"
+    active="true"
+    model="date_debut_validite"
+    origin_model="date_debut_validite"
+    error=""
+    approximative="false">
+  </date-text-input-directive>
+
+  <date-text-input-directive
+    label="'Fin de validité de la nouvelle attestation (calcul automatique)'"
+    active="false"
+    model="date_fin_validite"
+    origin_model="date_fin_validite"
+    error=""
+    approximative="false">
+  </date-text-input-directive>
+</div>
+
+<div class="modal-footer">
+  <a class="btn btn-primary button-confirm" ng-click="ok()">Valider</a>
+  <a class="btn btn-default button-cancel" ng-click="cancel()">Annuler</a>
+</div>
